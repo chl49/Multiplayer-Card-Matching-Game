@@ -46,6 +46,9 @@ public class HelloApplication extends Application {
         scene = new Scene(newRoot);
         stage.setScene(scene);
         stage.show();
+        //Launch server thread
+        Thread serv = new Thread(new Server());
+        serv.start();
     }
 
     public void switchToClientScene(ActionEvent event) throws IOException {
@@ -54,6 +57,8 @@ public class HelloApplication extends Application {
         scene = new Scene(newRoot);
         stage.setScene(scene);
         stage.show();
+        Thread cl = new Thread(new Client());
+        cl.start();
     }
 
     public static void main(String[] args) {

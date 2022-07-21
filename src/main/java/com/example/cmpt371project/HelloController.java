@@ -30,9 +30,7 @@ public class HelloController {
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
-        //Launch server thread
-        Thread serv = new Thread(new Server());
-        serv.start();
+
     }
 
     public void switchToClientScene(ActionEvent event) throws IOException {
@@ -41,8 +39,7 @@ public class HelloController {
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
-        Thread cl = new Thread(new Client());
-        cl.start();
+
     }
     @FXML
     private Label welcomeText;
