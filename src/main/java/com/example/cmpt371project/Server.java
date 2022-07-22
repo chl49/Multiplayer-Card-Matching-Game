@@ -11,16 +11,10 @@ public class Server implements Runnable{
 
             byte[] Buffer_in = new byte[256];
             DatagramPacket packet_in = new DatagramPacket(Buffer_in, Buffer_in.length);
-            //Get Host ip address
-            String urlString = "http://checkip.amazonaws.com/";
-            URL url = new URL(urlString);
-            String ip;
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()))) {
-                ip = br.readLine();
-            }
+
             // wait for incoming data
             serverRunning = true;
-            System.out.println("Setting up Server at " + ip);
+            System.out.println("Setting up Server at ");
             while (serverRunning) {
                 socket.receive(packet_in);
 

@@ -2,20 +2,25 @@ package com.example.cmpt371project;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import javafx.scene.Parent;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 
 public class HelloApplication extends Application {
 
     private Stage stage;
     private Scene scene;
     private Parent root;
-
+    @FXML private Label hostIP;
     @Override
     public void start(Stage stage) throws IOException {
         /*
@@ -41,11 +46,22 @@ public class HelloApplication extends Application {
     }
 
     public void switchToServerScene(ActionEvent event) throws IOException {
+        //Get Host ip address
+        String urlString = "http://checkip.amazonaws.com/";
+        URL url = new URL(urlString);
+        String ip;
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()))) {
+            ip = br.readLine();
+        }
+        System.out.println(ip);
         Parent newRoot = FXMLLoader.load(getClass().getResource("ServerScene.fxml"));
+        hostIP = (Label) newRoot.lookup("#hostIP");
+        hostIP.setText(ip);
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene(newRoot);
         stage.setScene(scene);
         stage.show();
+
         //Launch server thread
         Thread serv = new Thread(new Server());
         serv.start();
