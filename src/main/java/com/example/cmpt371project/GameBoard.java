@@ -3,50 +3,45 @@ package com.example.cmpt371project;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tooltip;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Random;
 
-import static javafx.application.Application.launch;
 
 public class GameBoard extends Application {
+    private final int TOTAL_NUMBER_OF_CARDS = 40;
     private int row = 0;
     private int column = 0;
     GridPane gridPane = new GridPane();
 
-    public void start(Stage stage) throws IOException {
-        Pane root = new Pane();
+    public void start(Stage stage) {
         stage.setTitle("Match!");
 
-        File file = getFileFromURL("img");
-        String[] imageNames = file.list();
+        // Gets all files from resources -> img
+        String[] imageNames = getListOfFileNames("img");
+
         int buttonId = 0;
-
-
-        for(int x = 0; x < 40; x++) {
+        for(int x = 0; x < TOTAL_NUMBER_OF_CARDS; x++) {
             addButton(imageNames, 8, buttonId);
             buttonId++;
         }
 
-        gridPane.setHgap(10);
-        gridPane.setVgap(10);
+        // Container that holds the game board (grid pane)
+        Pane root = new Pane();
+
+        // Sets spacing between cards
+        gridPane.setHgap(15);
+        gridPane.setVgap(15);
+
         root.getChildren().add(gridPane);
+
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
@@ -58,22 +53,22 @@ public class GameBoard extends Application {
             column = 1;
             row++;
         }
+
+        // Make a new button and give it a random card image
         Button button = new Button();
+
         Random rand = new Random();
         int index = rand.nextInt(imageNames.length);
-
         ImageView view = new ImageView(getClass().getResource("/img/" + imageNames[index]).toExternalForm());
         view.setFitHeight(80);
         view.setPreserveRatio(true);
         button.setGraphic(view);
 
-//        gridPane.getChildren().add(button);
-        final int numButton = buttonId;
         button.setId("" + buttonId);
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                System.out.println("id(" + button.getId()  + ") =  " + numButton);
+                System.out.println("Card id:" + button.getId());
             }
         });
         gridPane.add(button, column, row);
@@ -89,6 +84,12 @@ public class GameBoard extends Application {
         } finally {
             return file;
         }
+    }
+
+    private String[] getListOfFileNames(String path) {
+        File file = getFileFromURL("img");
+        String[] imageNames = file.list();
+        return imageNames;
     }
 
     public static void main(String[] args) {
