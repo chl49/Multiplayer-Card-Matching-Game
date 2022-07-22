@@ -9,7 +9,9 @@ public class Client implements Runnable
             // prepare data to be sent
             String Message = "Time";
             byte[] Buffer_out = Message.getBytes();
-            DatagramPacket packet_out = new DatagramPacket(Buffer_out, Buffer_out.length, InetAddress.getLocalHost(), 7070);
+
+            InetAddress address = InetAddress.getByName("142.58.223.218"); //Change to Input from string field
+            DatagramPacket packet_out = new DatagramPacket(Buffer_out, Buffer_out.length, address, 7070);
             // send data
             System.out.println("Sending to " + InetAddress.getLocalHost());
             socket.send(packet_out);
@@ -20,10 +22,6 @@ public class Client implements Runnable
             String Response = new String(packet_in.getData()).trim();
             System.out.println("according to the server, the time is: " +Response);
             socket.close();
-        } catch (SocketException e) {
-            throw new RuntimeException(e);
-        } catch (UnknownHostException e) {
-            throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
