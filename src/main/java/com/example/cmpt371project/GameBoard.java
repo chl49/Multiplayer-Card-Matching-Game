@@ -12,11 +12,13 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Random;
+import java.util.*;
+
+import static java.util.Arrays.asList;
 
 
 public class GameBoard extends Application {
-    private final int TOTAL_NUMBER_OF_CARDS = 40;
+    private final int TOTAL_NUMBER_OF_CARDS = 8;
     private int row = 0;
     private int column = 0;
     GridPane gridPane = new GridPane();
@@ -26,10 +28,16 @@ public class GameBoard extends Application {
 
         // Gets all files from resources -> img
         String[] imageNames = getListOfFileNames("img");
+        Collections.shuffle(asList(imageNames));
 
         int buttonId = 0;
+        LinkedHashMap<String, Integer> cardCount = new LinkedHashMap<String, Integer>();
+        int TOTAL_NUMBER_OF_PAIRS = TOTAL_NUMBER_OF_CARDS / 2;
+        for(int i = 0; i < TOTAL_NUMBER_OF_PAIRS; i++){
+            cardCount.put(imageNames[i], 0);
+        }
         for(int x = 0; x < TOTAL_NUMBER_OF_CARDS; x++) {
-            addButton(imageNames, 8, buttonId);
+            addButton(cardCount, 8, buttonId);
             buttonId++;
         }
 
@@ -47,7 +55,7 @@ public class GameBoard extends Application {
         stage.show();
     }
 
-    private void addButton(String[] imageNames, int numOfColumns, int buttonId) {
+    private void addButton(LinkedHashMap<String, Integer> cardMap, int numOfColumns, int buttonId) {
         column++;
         if(column > numOfColumns) {
             column = 1;
@@ -58,8 +66,16 @@ public class GameBoard extends Application {
         Button button = new Button();
 
         Random rand = new Random();
-        int index = rand.nextInt(imageNames.length);
-        ImageView view = new ImageView(getClass().getResource("/img/" + imageNames[index]).toExternalForm());
+
+        String[] imageNames = cardMap.keySet().toArray(new String[cardMap.size()]);
+        // Makes sure cards are placed in pairs
+        String cardName = imageNames[rand.nextInt(imageNames.length)];
+        while(cardMap.get(cardName) >= 2){
+            cardName = imageNames[rand.nextInt(imageNames.length)];
+        }
+        cardMap.put(cardName, cardMap.get(cardName) + 1);
+
+        ImageView view = new ImageView(getClass().getResource("/img/" + cardName).toExternalForm());
         view.setFitHeight(80);
         view.setPreserveRatio(true);
         button.setGraphic(view);
