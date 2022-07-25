@@ -5,18 +5,22 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.cmpt371project.HelloApplication">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/18" fx:controller="com.example.cmpt371project.HelloApplication">
     <children>
         <Label fx:id= "hostIP" layoutX="180.0" layoutY="6.0" >
             <font>
                 <Font size="50.0" />
             </font>
         </Label>
-        <Button layoutX="208.0" layoutY="180.0" mnemonicParsing="false" onAction="#switchToHomeScene" text="Back to Home Screen">
+        <Button layoutX="197.0" layoutY="180.0" mnemonicParsing="false" onAction="#switchToHomeScene" text="Back to Home Screen">
             <font>
                 <Font size="20.0" />
             </font>
         </Button>
+      <Button alignment="CENTER" layoutX="197.0" layoutY="226.0" mnemonicParsing="false" onAction="#switchToHomeScene" prefHeight="40.0" prefWidth="207.0" text="Start Game">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Button>
     </children>
 </AnchorPane>

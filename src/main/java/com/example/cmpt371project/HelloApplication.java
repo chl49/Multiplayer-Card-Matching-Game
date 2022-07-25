@@ -79,9 +79,13 @@ public class HelloApplication extends Application {
         scene = new Scene(newRoot);
         stage.setScene(scene);
         stage.show();
+
+        //Hit Enter upon typing ip address
         EventHandler<ActionEvent> onClick = new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e)
             {
+                hostIP = (Label) newRoot.lookup("#hostIP");
+                hostIP.setText(getIp.getText());
 
                 Thread cl = new Thread(new Client(getIp.getText()));
                 cl.start();

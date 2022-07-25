@@ -8,13 +8,16 @@ public class Server implements Runnable{
     public void run() {
         try {
             DatagramSocket socket = new DatagramSocket(7070); // establish socket and listen
+            //InetAddress address = InetAddress.getByName("142.58.223.218");
+            InetAddress ip = InetAddress.getLocalHost();
+            //InetAddress address = getByAddress("142.58.223.218", byte[] addr)
 
             byte[] Buffer_in = new byte[256];
             DatagramPacket packet_in = new DatagramPacket(Buffer_in, Buffer_in.length);
 
             // wait for incoming data
             serverRunning = true;
-            System.out.println("Setting up Server at ");
+            System.out.println("Setting up Server at Local address "+ ip.getHostAddress());
             while (serverRunning) {
                 socket.receive(packet_in);
 
