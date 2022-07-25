@@ -18,7 +18,7 @@ import static java.util.Arrays.asList;
 
 
 public class GameBoard extends Application {
-    private final int TOTAL_NUMBER_OF_CARDS = 8;
+    private final int TOTAL_NUMBER_OF_CARDS = 40;
     private int row = 0;
     private int column = 0;
     GridPane gridPane = new GridPane();
