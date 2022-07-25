@@ -3,6 +3,10 @@ package com.example.cmpt371project;
 import java.io.*; import java.net.*;
 public class Client implements Runnable
 {
+    private String getIP;
+    public Client(String getIP){
+        this.getIP = getIP;
+    }
     public void run() {
         try {
             DatagramSocket socket = new DatagramSocket(); // establish socket
@@ -10,7 +14,7 @@ public class Client implements Runnable
             String Message = "Time";
             byte[] Buffer_out = Message.getBytes();
 
-            InetAddress address = InetAddress.getByName("142.58.223.218"); //Change to Input from string field
+            InetAddress address = InetAddress.getByName(getIP); //Change to Input from string field
             DatagramPacket packet_out = new DatagramPacket(Buffer_out, Buffer_out.length, address, 7070);
             // send data
             System.out.println("Sending to " + InetAddress.getLocalHost());
