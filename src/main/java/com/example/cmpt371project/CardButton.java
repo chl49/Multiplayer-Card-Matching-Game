@@ -9,6 +9,8 @@ package com.example.cmpt371project;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.Border;
 
 public class CardButton extends Button {
     public enum CardButtonSate {
@@ -24,21 +26,23 @@ public class CardButton extends Button {
     private ImageView cardFront;
     private ImageView cardBack;
     private CardButtonSate state;
-    private static final String CARD_BACK_FILE_IMAGE = "/img/backs/black_joker.png";
+    private static final String CARD_BACK_FILE_IMAGE = "/img/backs/card_back.png";
+    private static final int CARD_SIZE = 125;
 
     public CardButton(ImageView cardFront, String value) {
         super();
+        this.borderProperty();
         this.value = value;
+        this.setBackground(Background.EMPTY);
 
-        setOnAction(this);
         this.cardBack = new ImageView(getClass().getResource(CARD_BACK_FILE_IMAGE).toExternalForm());;
-        cardBack.setFitHeight(80);
+        cardBack.setFitHeight(CARD_SIZE);
         cardBack.setPreserveRatio(true);
         this.setGraphic(cardBack);
         this.state = CardButtonSate.DEFAULT;
 
         this.cardFront = cardFront;
-        cardFront.setFitHeight(80);
+        cardFront.setFitHeight(CARD_SIZE);
         cardFront.setPreserveRatio(true);
     }
 
@@ -46,10 +50,6 @@ public class CardButton extends Button {
         super(s, node);
         this.value = value;
 
-
-    }
-
-    private void setOnAction(Button clickedButton) {
 
     }
 

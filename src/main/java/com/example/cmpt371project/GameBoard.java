@@ -4,9 +4,12 @@ import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.SplitPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
@@ -23,13 +26,22 @@ public class GameBoard extends Application {
     private final int TOTAL_NUMBER_OF_CARDS = 40;
     private int row = 0;
     private int column = 0;
+    private static final String CARD_FRONT_PATH = "img/fronts/";
+    private static final int GRID_PANE_VERTICAL_SPACING = 0;
+    private static final int GRID_PANE_HORIZONTAL_SPACING = 0;
+    private static final int GRID_PANE_BORDER_SPACING = 15;
+    private static final int MAX_COLUMNS = 8;
+    private Label playerOneScoreLabel = new Label("Player 1: \t0");
+    private Label playerTwoScoreLabel = new Label("Player 2: \t0");
+    private Label playerThreeScoreLabel = new Label("Player 3: \t0");
+    private Label playerFourScoreLabel = new Label("Player 4: \t0");
     GridPane gridPane = new GridPane();
 
     public void start(Stage stage) {
         stage.setTitle("Match!");
 
         // Gets all files from resources -> img -> fronts
-        String[] imageNames = getListOfFileNames("img/fronts/");
+        String[] imageNames = getListOfFileNames(CARD_FRONT_PATH);
         Collections.shuffle(asList(imageNames));
 
         int buttonId = 0;
@@ -38,49 +50,43 @@ public class GameBoard extends Application {
         for(int i = 0; i < TOTAL_NUMBER_OF_PAIRS; i++){
             cardCount.put(imageNames[i], 0);
         }
+
+        // Add cards to the grid pane
         for(int x = 0; x < TOTAL_NUMBER_OF_CARDS; x++) {
-            addButton(cardCount, 8, buttonId);
+            addButton(cardCount, MAX_COLUMNS, buttonId);
             buttonId++;
         }
 
         // Container that holds the game board (grid pane)
-        Pane root = new Pane();
+
 
         // Sets spacing between cards
-        gridPane.setHgap(15);
-        gridPane.setVgap(15);
+        gridPane.setHgap(GRID_PANE_HORIZONTAL_SPACING);
+        gridPane.setVgap(GRID_PANE_VERTICAL_SPACING);
 
-        root.getChildren().add(gridPane);
+        // Padding so its away from the edge of the border
+        // top, right, bottom, left
+        gridPane.setPadding(new Insets(GRID_PANE_BORDER_SPACING, GRID_PANE_BORDER_SPACING, GRID_PANE_BORDER_SPACING, 0));
+
+        SplitPane root = new SplitPane();
+        root.setOrientation(Orientation.HORIZONTAL);
+        VBox playerScores = new VBox();
+        playerScores.getChildren().add(0, playerFourScoreLabel);
+        playerScores.getChildren().add(0, playerThreeScoreLabel);
+        playerScores.getChildren().add(0, playerTwoScoreLabel);
+        playerScores.getChildren().add(0, playerOneScoreLabel);
+
+        root.getItems().add(0, playerScores);
+        root.getItems().add(1, gridPane);
 
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
-        getGameBoard(gridPane);
+        getGameBoardAsString(gridPane);
     }
 
-    public String[][] getGameBoard(GridPane gameBoard) {
-        ObservableList<Node> cards = gridPane.getChildren();
-        String[][] cardValues = new String[cards.size()][2];
-
-        int index = 0;
-        for(Node card : cards) {
-            CardButton cardButton = (CardButton) card;
-            cardValues[index][0] = cardButton.getId();
-            cardValues[index][1] = cardButton.getValue();
-            index++;
-        }
-
-
-        for(int i = 0; i < cardValues.length; i++)
-        {
-            for(int j = 0; j < cardValues[i].length; j++)
-            {
-                System.out.print(cardValues[i][j]);
-                if(j < cardValues[i].length - 1) System.out.print(" ");
-            }
-            System.out.println();
-        }
-        return cardValues;
+    public static void main(String[] args) {
+        launch();
     }
 
     private void addButton(LinkedHashMap<String, Integer> cardMap, int numOfColumns, int buttonId) {
@@ -125,9 +131,8 @@ public class GameBoard extends Application {
 
         });
 
-        button.setId("" + buttonId);
+        button.setId(String.valueOf(buttonId));
         gridPane.add(button, column, row);
-
     }
 
     private File getFileFromURL(String path) {
@@ -148,9 +153,17 @@ public class GameBoard extends Application {
         return imageNames;
     }
 
-    public static void main(String[] args) {
-        launch();
-    }
+    public String getGameBoardAsString(GridPane gameBoard) {
+        ObservableList<Node> cards = gridPane.getChildren();
+        StringBuilder sb = new StringBuilder();
 
+        Iterator<Node> iterator = cards.iterator();
+        while (iterator.hasNext()) {
+            CardButton cardButton = (CardButton) iterator.next();
+            sb = iterator.hasNext() ? sb.append(cardButton.getValue() + ',') : sb.append(cardButton.getValue());
+        }
+
+        return sb.toString();
+    }
 
 }
