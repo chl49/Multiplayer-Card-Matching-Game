@@ -22,6 +22,10 @@ public class GameBoard extends Application {
     private int row = 0;
     private int column = 0;
     GridPane gridPane = new GridPane();
+    String cardName = "";
+    int score = 0;
+    String selected1 = "";
+    String selected2 = "";
 
     public void start(Stage stage) {
         stage.setTitle("Match!");
@@ -69,7 +73,7 @@ public class GameBoard extends Application {
 
         String[] imageNames = cardMap.keySet().toArray(new String[cardMap.size()]);
         // Makes sure cards are placed in pairs
-        String cardName = imageNames[rand.nextInt(imageNames.length)];
+        cardName = imageNames[rand.nextInt(imageNames.length)];
         while(cardMap.get(cardName) >= 2){
             cardName = imageNames[rand.nextInt(imageNames.length)];
         }
@@ -80,14 +84,31 @@ public class GameBoard extends Application {
         view.setPreserveRatio(true);
         button.setGraphic(view);
 
-        button.setId("" + buttonId);
+        button.setId(cardName);
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
                 System.out.println("Card id:" + button.getId());
+                cardName = button.getId();
+                if(selected1.isEmpty() && selected2.isEmpty()){
+                    selected1 = cardName;
+                }
+                else if(selected2.isEmpty()){
+                    selected2 = cardName;
+                    checkForMatch();
+                }
+                System.out.println("Score: " + score);
             }
         });
         gridPane.add(button, column, row);
+    }
+
+    private void checkForMatch() {
+        if(selected1.equals(selected2)){
+            score++;
+        }
+        selected1 = "";
+        selected2 = "";
     }
 
     private File getFileFromURL(String path) {
