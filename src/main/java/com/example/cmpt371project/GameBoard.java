@@ -58,7 +58,7 @@ public class GameBoard extends Application {
         getGameBoard(gridPane);
     }
 
-    public void getGameBoard(GridPane gameBoard) {
+    public String[][] getGameBoard(GridPane gameBoard) {
         ObservableList<Node> cards = gridPane.getChildren();
         String[][] cardValues = new String[cards.size()][2];
 
@@ -80,7 +80,7 @@ public class GameBoard extends Application {
             }
             System.out.println();
         }
-
+        return cardValues;
     }
 
     private void addButton(LinkedHashMap<String, Integer> cardMap, int numOfColumns, int buttonId) {
