@@ -67,7 +67,6 @@ public class GameBoard extends Application {
         }
 
         // Make a new button and give it a random card image
-        Button button = new Button();
 
         Random rand = new Random();
 
@@ -79,10 +78,15 @@ public class GameBoard extends Application {
         }
         cardMap.put(cardName, cardMap.get(cardName) + 1);
 
-        ImageView view = new ImageView(getClass().getResource("/img/" + cardName).toExternalForm());
-        view.setFitHeight(80);
-        view.setPreserveRatio(true);
-        button.setGraphic(view);
+        String cardFileName = "/img/" + cardName;
+        String cardValue = cardName.split("\\.")[0];
+        Button button = new CardButton(new ImageView(getClass().getResource(cardFileName).toExternalForm()), cardValue);
+
+
+//        ImageView view = new ImageView(getClass().getResource("/img/" + cardName).toExternalForm());
+//        view.setFitHeight(80);
+//        view.setPreserveRatio(true);
+//        button.setGraphic(view);
 
         button.setId(cardName);
         button.setOnAction(new EventHandler<ActionEvent>() {
