@@ -1,8 +1,10 @@
 package com.example.cmpt371project;
 
 import javafx.application.Application;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
@@ -26,8 +28,8 @@ public class GameBoard extends Application {
     public void start(Stage stage) {
         stage.setTitle("Match!");
 
-        // Gets all files from resources -> img
-        String[] imageNames = getListOfFileNames("img");
+        // Gets all files from resources -> img -> fronts
+        String[] imageNames = getListOfFileNames("img/fronts/");
         Collections.shuffle(asList(imageNames));
 
         int buttonId = 0;
@@ -53,6 +55,32 @@ public class GameBoard extends Application {
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
+        getGameBoard(gridPane);
+    }
+
+    public void getGameBoard(GridPane gameBoard) {
+        ObservableList<Node> cards = gridPane.getChildren();
+        String[][] cardValues = new String[cards.size()][2];
+
+        int index = 0;
+        for(Node card : cards) {
+            CardButton cardButton = (CardButton) card;
+            cardValues[index][0] = cardButton.getId();
+            cardValues[index][1] = cardButton.getValue();
+            index++;
+        }
+
+
+        for(int i = 0; i < cardValues.length; i++)
+        {
+            for(int j = 0; j < cardValues[i].length; j++)
+            {
+                System.out.print(cardValues[i][j]);
+                if(j < cardValues[i].length - 1) System.out.print(" ");
+            }
+            System.out.println();
+        }
+
     }
 
     private void addButton(LinkedHashMap<String, Integer> cardMap, int numOfColumns, int buttonId) {
@@ -62,36 +90,44 @@ public class GameBoard extends Application {
             row++;
         }
 
-        // Make a new button and give it a random card image
-
         Random rand = new Random();
-
         String[] imageNames = cardMap.keySet().toArray(new String[cardMap.size()]);
+
         // Makes sure cards are placed in pairs
         String cardName = imageNames[rand.nextInt(imageNames.length)];
-        while(cardMap.get(cardName) >= 2){
+        while(cardMap.get(cardName) >= 2) {
             cardName = imageNames[rand.nextInt(imageNames.length)];
         }
         cardMap.put(cardName, cardMap.get(cardName) + 1);
 
-        String cardFileName = "/img/" + cardName;
         String cardValue = cardName.split("\\.")[0];
-        Button button = new CardButton(new ImageView(getClass().getResource(cardFileName).toExternalForm()), cardValue);
+        CardButton button = new CardButton(new ImageView(getClass().getResource("/img/fronts/" + cardName).toExternalForm()), cardValue);
 
+        button.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                switch(button.getState()) {
 
-//        ImageView view = new ImageView(getClass().getResource("/img/" + cardName).toExternalForm());
-//        view.setFitHeight(80);
-//        view.setPreserveRatio(true);
-//        button.setGraphic(view);
+                    case DEFAULT -> {
+                        System.out.println("Flipping card");
+                        button.setGraphic(button.getCardFront());
+                        button.setState(CardButton.CardButtonSate.FLIPPED);
+                    }
+                    case FLIPPED -> {
+                        System.out.println("Card is already flipped select a different card.");
+                    }
+                    case NOT_IN_PLAY -> {
+                        System.out.println("Card has already been used for a point.");
+                    }
+                }
+                System.out.println("Card id:" + button.getId() + "\tValue:" + button.getValue());
+            }
+
+        });
 
         button.setId("" + buttonId);
-//        button.setOnAction(new EventHandler<ActionEvent>() {
-//            @Override
-//            public void handle(ActionEvent e) {
-//
-//            }
-//        });
         gridPane.add(button, column, row);
+
     }
 
     private File getFileFromURL(String path) {
@@ -107,7 +143,7 @@ public class GameBoard extends Application {
     }
 
     private String[] getListOfFileNames(String path) {
-        File file = getFileFromURL("img");
+        File file = getFileFromURL(path);
         String[] imageNames = file.list();
         return imageNames;
     }

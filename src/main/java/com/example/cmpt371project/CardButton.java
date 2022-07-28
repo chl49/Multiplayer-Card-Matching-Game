@@ -6,8 +6,6 @@ package com.example.cmpt371project;
  * @project cmpt371-team04
  */
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
@@ -26,7 +24,7 @@ public class CardButton extends Button {
     private ImageView cardFront;
     private ImageView cardBack;
     private CardButtonSate state;
-    private static final String CARD_BACK_FILE_IMAGE = "/img/black_joker.png";
+    private static final String CARD_BACK_FILE_IMAGE = "/img/backs/black_joker.png";
 
     public CardButton(ImageView cardFront, String value) {
         super();
@@ -52,27 +50,7 @@ public class CardButton extends Button {
     }
 
     private void setOnAction(Button clickedButton) {
-        clickedButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                switch(state) {
 
-                    case DEFAULT -> {
-                        System.out.println("Flipping card");
-                        clickedButton.setGraphic(cardFront);
-                        state = CardButtonSate.FLIPPED;
-                    }
-                    case FLIPPED -> {
-                        System.out.println("Card is already flipped select a different card.");
-                    }
-                    case NOT_IN_PLAY -> {
-                        System.out.println("Card has already been used for a point.");
-                    }
-                }
-                System.out.println("Card id:" + clickedButton.getId() + "\tValue:" + value);
-            }
-
-        });
     }
 
     public String getValue() {
