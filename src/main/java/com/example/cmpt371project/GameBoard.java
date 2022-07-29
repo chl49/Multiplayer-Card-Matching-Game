@@ -6,7 +6,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
@@ -15,19 +14,20 @@ import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import static java.util.Arrays.asList;
 
 
 public class GameBoard extends Application {
-    private final int TOTAL_NUMBER_OF_CARDS = 40;
+    private final int TOTAL_NUMBER_OF_CARDS = 8;
     private int row = 0;
     private int column = 0;
     GridPane gridPane = new GridPane();
-    String cardName = "";
+    String cardName;
     int score = 0;
-    String selected1 = "";
-    String selected2 = "";
+    CardButton selected1;
+    CardButton selected2;
 
     public void start(Stage stage) {
         stage.setTitle("Match!");
@@ -106,16 +106,15 @@ public class GameBoard extends Application {
 
         String cardValue = cardName.split("\\.")[0];
         CardButton button = new CardButton(new ImageView(getClass().getResource("/img/fronts/" + cardName).toExternalForm()), cardValue);
-
+        button.setId(cardName);
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 switch(button.getState()) {
-
                     case DEFAULT -> {
                         System.out.println("Flipping card");
                         button.setGraphic(button.getCardFront());
-                        button.setState(CardButton.CardButtonSate.FLIPPED);
+                        button.setState(CardButton.CardButtonState.FLIPPED);
                     }
                     case FLIPPED -> {
                         System.out.println("Card is already flipped select a different card.");
@@ -124,37 +123,40 @@ public class GameBoard extends Application {
                         System.out.println("Card has already been used for a point.");
                     }
                 }
+                handleCardMatching(button);
                 System.out.println("Card id:" + button.getId() + "\tValue:" + button.getValue());
             }
 
         });
 
-        button.setId(cardName);
-        button.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                System.out.println("Card id:" + button.getId());
-                cardName = button.getId();
-                if(selected1.isEmpty() && selected2.isEmpty()){
-                    selected1 = cardName;
-                }
-                else if(selected2.isEmpty()){
-                    selected2 = cardName;
-                    checkForMatch();
-                }
-                System.out.println("Score: " + score);
-            }
-        });
         gridPane.add(button, column, row);
 
     }
-
-    private void checkForMatch() {
-        if(selected1.equals(selected2)){
-            score++;
+    public void handleCardMatching(CardButton buttonClicked) {
+        //System.out.println("Card id:" + buttonClicked.getId());
+        if(selected1 == null && selected2 == null){
+            selected1 = buttonClicked;
         }
-        selected1 = "";
-        selected2 = "";
+        else if(selected2 == null){
+            selected2 = buttonClicked;
+            checkForMatch(buttonClicked);
+        }
+        System.out.println("Score: " + score);
+    }
+    private void checkForMatch(CardButton buttonClicked) {
+        if(selected1.getId().equals(selected2.getId())){
+            System.out.println("Its a match!");
+            score++;
+            selected1.setState(CardButton.CardButtonState.NOT_IN_PLAY);
+            selected2.setState(CardButton.CardButtonState.NOT_IN_PLAY);
+        }
+        else {
+            System.out.println("Not a match, flipping cards");
+            selected1.setState(CardButton.CardButtonState.DEFAULT);
+            selected2.setState(CardButton.CardButtonState.DEFAULT);
+        }
+        selected1 = null;
+        selected2 = null;
     }
 
     private File getFileFromURL(String path) {
