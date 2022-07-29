@@ -17,7 +17,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-
+import com.example.cmpt371project.*;
 public class HelloApplication extends Application {
 
     private Stage stage;
@@ -95,6 +95,8 @@ public class HelloApplication extends Application {
 
     }
 
+    public void startGame(ActionEvent event){
+    }
 
     public static void main(String[] args) {
         launch();

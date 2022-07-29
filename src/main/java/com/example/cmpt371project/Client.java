@@ -11,7 +11,7 @@ public class Client implements Runnable
         try {
             DatagramSocket socket = new DatagramSocket(); // establish socket
             // prepare data to be sent
-            String Message = "Time";
+            String Message = "Join";
             byte[] Buffer_out = Message.getBytes();
 
             InetAddress address = InetAddress.getByName(getIP); //Change to Input from string field
@@ -20,11 +20,19 @@ public class Client implements Runnable
             System.out.println("Sending to " + InetAddress.getLocalHost());
             socket.send(packet_out);
             // receive response
-            byte[] Buffer_in = new byte[256];
+            byte[] Buffer_in = new byte[60000];
             DatagramPacket packet_in = new DatagramPacket(Buffer_in, Buffer_in.length);
             socket.receive(packet_in);
             String Response = new String(packet_in.getData()).trim();
-            System.out.println("according to the server, the time is: " +Response);
+            String[] data = Response.split(",");
+            for (int i = 0; i < data.length; i++){
+                System.out.println(data[i]);
+            }
+            /*
+            Gameboard.Clientstart(Data);
+            while (gameNotFinished)
+                msg = send id;
+            **/
             socket.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
