@@ -15,6 +15,7 @@ public class Server implements Runnable{
     private DatagramPacket[] playerData = new DatagramPacket[MAX_PLAYERS];
     private int currentPlayers = 1;
     private boolean serverRunning = false;
+    private boolean broadcast = false;
 
     public void run() {
         try {
@@ -34,11 +35,19 @@ public class Server implements Runnable{
 
                 String IncomingData = new String(packet_in.getData()).trim();
                 if (IncomingData.equals("Join")) {
+
                     System.out.println("Storing add " + packet_in.getAddress() + " with port: " + packet_in.getPort());
                     int port = packet_in.getPort();
                     InetAddress addr = packet_in.getAddress();
                     playerData[currentPlayers] = new DatagramPacket(Buffer_in,Buffer_in.length,addr,port);
                     currentPlayers++;
+
+                    //NEW ###Herb: Acknowledge users connected, locking clients to port
+                    String Message = "Connected";
+                    byte[] buffer_out = Message.getBytes();
+                    DatagramPacket packet_out = new DatagramPacket(buffer_out, buffer_out.length, addr, port);
+                    System.out.println("Sending to " + addr + " on port: " + port);
+                    socket.send(packet_out); // send data
                 }
                 if (currentPlayers >= MAX_PLAYERS){
                     //Launch host game
@@ -46,14 +55,14 @@ public class Server implements Runnable{
                     //Get gameBoard data
                     String[] data = {"Card","Order","here"}; //data = GameBoard.getBoard();
                     String msg = String.join(",",data);
-                    byte[] buffer_out = msg.getBytes();
+                    byte[] buffer_cast = msg.getBytes();
                     //Send Data to other players
                     for (int i = 1; i < MAX_PLAYERS; i++){
                         InetAddress  Add= playerData[i].getAddress();
                         int P = playerData[i].getPort();
-                        DatagramPacket packet_out = new DatagramPacket(buffer_out, buffer_out.length, Add, P);
+                        DatagramPacket packet_cast = new DatagramPacket(buffer_cast, buffer_cast.length, Add, P);
                         System.out.println("Sending to " + Add + " on port: " + P);
-                        socket.send(packet_out); // send data
+                        socket.send(packet_cast); // send data
                     }
                     /*
                     while gameNOtFinished

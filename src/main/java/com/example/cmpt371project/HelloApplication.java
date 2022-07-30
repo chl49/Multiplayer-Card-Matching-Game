@@ -24,8 +24,18 @@ public class HelloApplication extends Application {
     private Stage stage;
     private Scene scene;
     private Parent root;
+
+    private static boolean clientConnected = false;
     @FXML private Label hostIP;
     @FXML private TextField getIp;
+
+    public static void setClientConnect(boolean connect){
+        clientConnected = connect;
+    }
+    public static boolean getClientConnect(){
+        return clientConnected;
+    }
+
     @Override
     public void start(Stage stage) throws IOException {
         /*
@@ -91,9 +101,12 @@ public class HelloApplication extends Application {
             {
                 hostIP = (Label) newRoot.lookup("#hostIP");
                 hostIP.setText(getIp.getText());
+                Thread cl;
+                if(!clientConnected){
+                    cl = new Thread(new Client(getIp.getText()));
+                    cl.start();
+                }
 
-                Thread cl = new Thread(new Client(getIp.getText()));
-                cl.start();
             }
         };
         getIp.setOnAction(onClick);

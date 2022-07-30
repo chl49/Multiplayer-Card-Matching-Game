@@ -22,11 +22,27 @@ public class Client implements Runnable
             // receive response
             byte[] Buffer_in = new byte[60000];
             DatagramPacket packet_in = new DatagramPacket(Buffer_in, Buffer_in.length);
+
+
+            //NEW ###Herb: Client waits to receive acknowledgment from server to conform connection,
+            // which lets HelloApplication stop EventHandler from creating new client ports on enter
             socket.receive(packet_in);
             String Response = new String(packet_in.getData()).trim();
-            String[] data = Response.split(",");
-            for (int i = 0; i < data.length; i++){
-                System.out.println(data[i]);
+            if(Response.equals("Connected")){
+                System.out.println("connected");
+                HelloApplication.setClientConnect(true);
+            }
+            System.out.println(HelloApplication.getClientConnect());
+
+            //NEW ###Herb: After being connected, Client waits for cards
+
+            if(HelloApplication.getClientConnect()){
+                socket.receive(packet_in);
+                Response = new String(packet_in.getData()).trim();
+                String[] data = Response.split(",");
+                for (int i = 0; i < data.length; i++){
+                    System.out.println("data:" +data[i]);
+                }
             }
             /*
             Gameboard.Clientstart(Data);
