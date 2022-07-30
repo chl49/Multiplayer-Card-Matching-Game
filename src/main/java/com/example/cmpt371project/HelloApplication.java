@@ -16,6 +16,7 @@ import org.w3c.dom.Text;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
 import java.net.URL;
 import com.example.cmpt371project.*;
 public class HelloApplication extends Application {
@@ -53,10 +54,14 @@ public class HelloApplication extends Application {
         //Get Host ip address
         String urlString = "http://checkip.amazonaws.com/";
         URL url = new URL(urlString);
-        String ip;
+        //String ip;
+        String ip = InetAddress.getLocalHost().getHostAddress();
+        /*
         try (BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()))) {
             ip = br.readLine();
         }
+
+         */
         System.out.println(ip);
         Parent newRoot = FXMLLoader.load(getClass().getResource("ServerScene.fxml"));
         hostIP = (Label) newRoot.lookup("#hostIP");

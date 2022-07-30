@@ -11,7 +11,7 @@ public class Server implements Runnable{
     //Convert to thread eventually
     //player array variable to store players ports (only used for sending game board at the start)
     //
-    private final int MAX_PLAYERS = 3;
+    private final int MAX_PLAYERS = 4;
     private DatagramPacket[] playerData = new DatagramPacket[MAX_PLAYERS];
     private int currentPlayers = 1;
     private boolean serverRunning = false;
@@ -27,7 +27,7 @@ public class Server implements Runnable{
             DatagramPacket packet_in = new DatagramPacket(Buffer_in, Buffer_in.length);
 
             // wait for incoming data
-           serverRunning = true;
+            serverRunning = true;
             System.out.println("Setting up Server at Local address "+ ip.getHostAddress());
             while (serverRunning) {
                 socket.receive(packet_in);
