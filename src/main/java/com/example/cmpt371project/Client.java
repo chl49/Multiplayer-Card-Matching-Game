@@ -29,10 +29,9 @@ public class Client implements Runnable
             socket.receive(packet_in);
             String Response = new String(packet_in.getData()).trim();
             if(Response.equals("Connected")){
-                System.out.println("connected");
+                System.out.println("Client is connected");
                 HelloApplication.setClientConnect(true);
             }
-            System.out.println(HelloApplication.getClientConnect());
 
             //NEW ###Herb: After being connected, Client waits for cards
 

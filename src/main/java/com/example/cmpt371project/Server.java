@@ -13,7 +13,7 @@ public class Server implements Runnable{
     //
     private final int MAX_PLAYERS = 4;
     private DatagramPacket[] playerData = new DatagramPacket[MAX_PLAYERS];
-    private int currentPlayers = 1;
+    private int currentPlayers = 0;
     private boolean serverRunning = false;
     private boolean broadcast = false;
 
@@ -30,6 +30,9 @@ public class Server implements Runnable{
             // wait for incoming data
             serverRunning = true;
             System.out.println("Setting up Server at Local address "+ ip.getHostAddress());
+            HelloApplication.setHostAddress(ip.getHostAddress());
+            HelloApplication.setHostPort(socket.getPort());
+
             while (serverRunning) {
                 socket.receive(packet_in);
 
@@ -57,7 +60,7 @@ public class Server implements Runnable{
                     String msg = String.join(",",data);
                     byte[] buffer_cast = msg.getBytes();
                     //Send Data to other players
-                    for (int i = 1; i < MAX_PLAYERS; i++){
+                    for (int i = 0; i < MAX_PLAYERS; i++){
                         InetAddress  Add= playerData[i].getAddress();
                         int P = playerData[i].getPort();
                         DatagramPacket packet_cast = new DatagramPacket(buffer_cast, buffer_cast.length, Add, P);

@@ -28,7 +28,26 @@ public class HelloApplication extends Application {
     private static boolean clientConnected = false;
     @FXML private Label hostIP;
     @FXML private TextField getIp;
+    private static final Object key = new Object();
+    private static String hostAddress = "";
+    private static int hostPort = 0;
 
+    public static void setHostAddress(String address){
+        hostAddress = address;
+    }
+    public static String getHostAddress(){
+        return hostAddress;
+    }
+    public static void setHostPort(int port){
+        //key.notify();
+        hostPort = port;
+        synchronized(key){
+            key.notify();
+        }
+    }
+    public synchronized int getHostPort(){
+        return hostPort;
+    }
     public static void setClientConnect(boolean connect){
         clientConnected = connect;
     }
@@ -60,7 +79,7 @@ public class HelloApplication extends Application {
         stage.show();
     }
 
-    public void switchToServerScene(ActionEvent event) throws IOException {
+    public void switchToServerScene(ActionEvent event) throws IOException, InterruptedException {
         //Get Host ip address
         String urlString = "http://checkip.amazonaws.com/";
         URL url = new URL(urlString);
@@ -82,8 +101,21 @@ public class HelloApplication extends Application {
         stage.show();
 
         //Launch server thread
-        Thread serv = new Thread(new Server());
+        Thread serv = new Thread(new Server(), "Server Thread");
         serv.start();
+
+        //wait for server thread to establish
+        synchronized(key){
+            while (hostPort==0) {
+                key.wait();
+            }
+        }
+        //Launch host's client thread
+        Thread cl;
+        if(!clientConnected&&hostPort!=0){
+            cl = new Thread(new Client(getHostAddress()), "Host Client Thread");
+            cl.start();
+        }
     }
 
     public void switchToClientScene(ActionEvent event) throws IOException {
@@ -103,7 +135,7 @@ public class HelloApplication extends Application {
                 hostIP.setText(getIp.getText());
                 Thread cl;
                 if(!clientConnected){
-                    cl = new Thread(new Client(getIp.getText()));
+                    cl = new Thread(new Client(getIp.getText()), "Guest Client Thread");
                     cl.start();
                 }
 
