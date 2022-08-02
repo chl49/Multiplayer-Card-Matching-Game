@@ -121,7 +121,6 @@ public class GameBoard extends Application {
                     case DEFAULT -> {
                         //System.out.println("Flipping card");
                         if(selected1 == null || selected2 == null) {
-                            button.setGraphic(button.getCardFront());
                             button.setState(CardButton.CardButtonState.FLIPPED);
                         }
                     }
