@@ -56,7 +56,7 @@ public class Server implements Runnable{
                     //Launch host game
                     // Gameboard.hostStart();
                     GameBoard game = new GameBoard();
-                    game.hostStart();
+                    game.start();
                     //Get gameBoard data
                     String[] data = game.getCardValues();
                     String msg = String.join(",",data);

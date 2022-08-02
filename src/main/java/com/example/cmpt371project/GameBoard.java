@@ -19,14 +19,14 @@ import java.util.*;
 import static java.util.Arrays.asList;
 
 
-public class GameBoard {
+public class GameBoard  {
     private final int TOTAL_NUMBER_OF_CARDS = 40;
     private int row = 0;
     private int column = 0;
     GridPane gridPane = new GridPane();
 
     private String[] cardValuesOrdered;
-    public void hostStart() {
+    public void start() {
         //stage.setTitle("Match!");
 
         // Gets all files from resources -> img -> fronts
@@ -59,6 +59,70 @@ public class GameBoard {
         cardValuesOrdered = getGameBoard(gridPane);
     }
 
+    public void clientStart(Stage stage,String[] data) {
+        stage.setTitle("Match!");
+
+        // Gets all files from resources -> img -> fronts
+        String[] imageNames = getListOfFileNames("img/fronts/");
+        Collections.shuffle(asList(imageNames));
+
+        int buttonId = 0;
+        LinkedHashMap<String, Integer> cardCount = new LinkedHashMap<String, Integer>();
+        int TOTAL_NUMBER_OF_PAIRS = TOTAL_NUMBER_OF_CARDS / 2;
+        for(int i = 0; i < TOTAL_NUMBER_OF_PAIRS; i++){
+            cardCount.put(imageNames[i], 0);
+        }
+        for(int x = 0; x < TOTAL_NUMBER_OF_CARDS; x++) {
+            column++;
+            if(column > 8) {
+                column = 1;
+                row++;
+            }
+            String card = data[x] + ".png";
+            CardButton button = new CardButton(new ImageView(getClass().getResource("/img/fronts/" + card).toExternalForm()), data[x]);
+            button.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    switch(button.getState()) {
+
+                        case DEFAULT -> {
+                            System.out.println("Flipping card");
+                            button.setGraphic(button.getCardFront());
+                            button.setState(CardButton.CardButtonSate.FLIPPED);
+                        }
+                        case FLIPPED -> {
+                            System.out.println("Card is already flipped select a different card.");
+                        }
+                        case NOT_IN_PLAY -> {
+                            System.out.println("Card has already been used for a point.");
+                        }
+                    }
+                    System.out.println("Card id:" + button.getId() + "\tValue:" + button.getValue());
+                }
+
+            });
+
+            button.setId("" + buttonId);
+            gridPane.add(button, column, row);
+            buttonId++;
+        }
+
+        // Container that holds the game board (grid pane)
+        Pane root = new Pane();
+
+        // Sets spacing between cards
+        gridPane.setHgap(15);
+        gridPane.setVgap(15);
+
+        root.getChildren().add(gridPane);
+
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+        getGameBoard(gridPane);
+
+    }
+
     public String[] getGameBoard(GridPane gameBoard) {
         ObservableList<Node> cards = gridPane.getChildren();
         String[] cardValues = new String[cards.size()];
@@ -68,13 +132,6 @@ public class GameBoard {
             CardButton cardButton = (CardButton) card;
             cardValues[index] = cardButton.getValue();
             index++;
-        }
-
-
-        for(int i = 0; i < cardValues.length; i++)
-        {
-            System.out.println(cardValues[i]);
-            System.out.println();
         }
         return cardValues;
     }
@@ -147,4 +204,5 @@ public class GameBoard {
     public String[] getCardValues() {
         return cardValuesOrdered;
     }
+
 }
