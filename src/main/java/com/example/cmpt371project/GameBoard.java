@@ -86,7 +86,7 @@ public class GameBoard {
             }
             String card = data[x] + ".png";
             CardButton button = new CardButton(new ImageView(getClass().getResource("/img/fronts/" + card).toExternalForm()), data[x]);
-            button.setId(cardName);
+            button.setId(card);
             button.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent actionEvent) {
