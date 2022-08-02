@@ -19,14 +19,15 @@ import java.util.*;
 import static java.util.Arrays.asList;
 
 
-public class GameBoard extends Application {
+public class GameBoard {
     private final int TOTAL_NUMBER_OF_CARDS = 40;
     private int row = 0;
     private int column = 0;
     GridPane gridPane = new GridPane();
 
-    public void start(Stage stage) {
-        stage.setTitle("Match!");
+    private String[] cardValuesOrdered;
+    public void hostStart() {
+        //stage.setTitle("Match!");
 
         // Gets all files from resources -> img -> fronts
         String[] imageNames = getListOfFileNames("img/fronts/");
@@ -44,40 +45,35 @@ public class GameBoard extends Application {
         }
 
         // Container that holds the game board (grid pane)
-        Pane root = new Pane();
+//        Pane root = new Pane();
 
         // Sets spacing between cards
-        gridPane.setHgap(15);
-        gridPane.setVgap(15);
+//        gridPane.setHgap(15);
+//        gridPane.setVgap(15);
 
-        root.getChildren().add(gridPane);
+//        root.getChildren().add(gridPane);
 
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-        getGameBoard(gridPane);
+//        Scene scene = new Scene(root);
+//        stage.setScene(scene);
+//        stage.show();
+        cardValuesOrdered = getGameBoard(gridPane);
     }
 
-    public String[][] getGameBoard(GridPane gameBoard) {
+    public String[] getGameBoard(GridPane gameBoard) {
         ObservableList<Node> cards = gridPane.getChildren();
-        String[][] cardValues = new String[cards.size()][2];
+        String[] cardValues = new String[cards.size()];
 
         int index = 0;
         for(Node card : cards) {
             CardButton cardButton = (CardButton) card;
-            cardValues[index][0] = cardButton.getId();
-            cardValues[index][1] = cardButton.getValue();
+            cardValues[index] = cardButton.getValue();
             index++;
         }
 
 
         for(int i = 0; i < cardValues.length; i++)
         {
-            for(int j = 0; j < cardValues[i].length; j++)
-            {
-                System.out.print(cardValues[i][j]);
-                if(j < cardValues[i].length - 1) System.out.print(" ");
-            }
+            System.out.println(cardValues[i]);
             System.out.println();
         }
         return cardValues;
@@ -148,9 +144,7 @@ public class GameBoard extends Application {
         return imageNames;
     }
 
-    public static void main(String[] args) {
-        launch();
+    public String[] getCardValues() {
+        return cardValuesOrdered;
     }
-
-
 }

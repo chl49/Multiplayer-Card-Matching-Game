@@ -2,16 +2,16 @@ package com.example.cmpt371project;
 
 import java.io.*;
 import java.net.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
 
 import com.example.cmpt371project.*;
+import javafx.stage.Stage;
 
 public class Server implements Runnable{
     //Convert to thread eventually
     //player array variable to store players ports (only used for sending game board at the start)
     //
-    private final int MAX_PLAYERS = 4;
+    private final int MAX_PLAYERS = 1;
     private DatagramPacket[] playerData = new DatagramPacket[MAX_PLAYERS];
     private int currentPlayers = 0;
     private boolean serverRunning = false;
@@ -55,13 +55,16 @@ public class Server implements Runnable{
                 if (currentPlayers >= MAX_PLAYERS){
                     //Launch host game
                     // Gameboard.hostStart();
+                    GameBoard game = new GameBoard();
+                    game.hostStart();
                     //Get gameBoard data
-                    String[] data = {"Card","Order","here"}; //data = GameBoard.getBoard();
+                    String[] data = game.getCardValues();
                     String msg = String.join(",",data);
+                    System.out.println(msg);
                     byte[] buffer_cast = msg.getBytes();
                     //Send Data to other players
                     for (int i = 0; i < MAX_PLAYERS; i++){
-                        InetAddress  Add= playerData[i].getAddress();
+                        InetAddress Add = playerData[i].getAddress();
                         int P = playerData[i].getPort();
                         DatagramPacket packet_cast = new DatagramPacket(buffer_cast, buffer_cast.length, Add, P);
                         System.out.println("Sending to " + Add + " on port: " + P);
@@ -70,7 +73,7 @@ public class Server implements Runnable{
                     /*
                     while gameNOtFinished
                         wait on reply
-                        recieve data
+                        receive data
                         lock buttons
                         do game logic
                         send reply lock/unlock
