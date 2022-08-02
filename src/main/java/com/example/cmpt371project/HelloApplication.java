@@ -16,15 +16,45 @@ import org.w3c.dom.Text;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
 import java.net.URL;
-
+import com.example.cmpt371project.*;
 public class HelloApplication extends Application {
 
     private Stage stage;
     private Scene scene;
     private Parent root;
+
+    private static boolean clientConnected = false;
     @FXML private Label hostIP;
     @FXML private TextField getIp;
+    private static final Object key = new Object();
+    private static String hostAddress = "";
+    private static int hostPort = 0;
+
+    public static void setHostAddress(String address){
+        hostAddress = address;
+    }
+    public static String getHostAddress(){
+        return hostAddress;
+    }
+    public static void setHostPort(int port){
+        //key.notify();
+        hostPort = port;
+        synchronized(key){
+            key.notify();
+        }
+    }
+    public synchronized int getHostPort(){
+        return hostPort;
+    }
+    public static void setClientConnect(boolean connect){
+        clientConnected = connect;
+    }
+    public static boolean getClientConnect(){
+        return clientConnected;
+    }
+
     @Override
     public void start(Stage stage) throws IOException {
         /*
@@ -49,14 +79,18 @@ public class HelloApplication extends Application {
         stage.show();
     }
 
-    public void switchToServerScene(ActionEvent event) throws IOException {
+    public void switchToServerScene(ActionEvent event) throws IOException, InterruptedException {
         //Get Host ip address
         String urlString = "http://checkip.amazonaws.com/";
         URL url = new URL(urlString);
-        String ip;
+        //String ip;
+        String ip = InetAddress.getLocalHost().getHostAddress();
+        /*
         try (BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()))) {
             ip = br.readLine();
         }
+
+         */
         System.out.println(ip);
         Parent newRoot = FXMLLoader.load(getClass().getResource("ServerScene.fxml"));
         hostIP = (Label) newRoot.lookup("#hostIP");
@@ -67,8 +101,21 @@ public class HelloApplication extends Application {
         stage.show();
 
         //Launch server thread
-        Thread serv = new Thread(new Server());
+        Thread serv = new Thread(new Server(), "Server Thread");
         serv.start();
+
+        //wait for server thread to establish
+        synchronized(key){
+            while (hostPort==0) {
+                key.wait();
+            }
+        }
+        //Launch host's client thread
+        Thread cl;
+        if(!clientConnected&&hostPort!=0){
+            cl = new Thread(new Client(getHostAddress()), "Host Client Thread");
+            cl.start();
+        }
     }
 
     public void switchToClientScene(ActionEvent event) throws IOException {
@@ -86,15 +133,20 @@ public class HelloApplication extends Application {
             {
                 hostIP = (Label) newRoot.lookup("#hostIP");
                 hostIP.setText(getIp.getText());
+                Thread cl;
+                if(!clientConnected){
+                    cl = new Thread(new Client(getIp.getText()), "Guest Client Thread");
+                    cl.start();
+                }
 
-                Thread cl = new Thread(new Client(getIp.getText()));
-                cl.start();
             }
         };
         getIp.setOnAction(onClick);
 
     }
 
+    public void startGame(ActionEvent event){
+    }
 
     public static void main(String[] args) {
         launch();
