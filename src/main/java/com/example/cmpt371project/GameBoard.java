@@ -1,5 +1,6 @@
 package com.example.cmpt371project;
 
+import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -9,18 +10,18 @@ import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 import static java.util.Arrays.asList;
 
 
 public class GameBoard extends Application {
-    private final int TOTAL_NUMBER_OF_CARDS = 8;
+    private final int TOTAL_NUMBER_OF_CARDS = 40;
     private int row = 0;
     private int column = 0;
     GridPane gridPane = new GridPane();
@@ -112,9 +113,11 @@ public class GameBoard extends Application {
             public void handle(ActionEvent actionEvent) {
                 switch(button.getState()) {
                     case DEFAULT -> {
-                        System.out.println("Flipping card");
-                        button.setGraphic(button.getCardFront());
-                        button.setState(CardButton.CardButtonState.FLIPPED);
+                        //System.out.println("Flipping card");
+                        if(selected1 == null || selected2 == null) {
+                            button.setGraphic(button.getCardFront());
+                            button.setState(CardButton.CardButtonState.FLIPPED);
+                        }
                     }
                     case FLIPPED -> {
                         System.out.println("Card is already flipped select a different card.");
@@ -124,7 +127,7 @@ public class GameBoard extends Application {
                     }
                 }
                 handleCardMatching(button);
-                System.out.println("Card id:" + button.getId() + "\tValue:" + button.getValue());
+                //System.out.println("Card id:" + button.getId() + "\tValue:" + button.getValue());
             }
 
         });
@@ -139,24 +142,34 @@ public class GameBoard extends Application {
         }
         else if(selected2 == null){
             selected2 = buttonClicked;
-            checkForMatch(buttonClicked);
+            checkForMatch();
         }
-        System.out.println("Score: " + score);
+        //System.out.println("Score: " + score);
     }
-    private void checkForMatch(CardButton buttonClicked) {
-        if(selected1.getId().equals(selected2.getId())){
+    private void checkForMatch() {
+        if(selected1.getId().equals(selected2.getId()) && selected1 != selected2){
             System.out.println("Its a match!");
             score++;
-            selected1.setState(CardButton.CardButtonState.NOT_IN_PLAY);
-            selected2.setState(CardButton.CardButtonState.NOT_IN_PLAY);
+            PauseTransition pause = new PauseTransition(Duration.seconds(0.7));
+            pause.setOnFinished(e ->{
+                selected1.setState(CardButton.CardButtonState.NOT_IN_PLAY);
+                selected2.setState(CardButton.CardButtonState.NOT_IN_PLAY);
+                selected1 = null;
+                selected2 = null;
+            });
+            pause.play();
         }
         else {
             System.out.println("Not a match, flipping cards");
-            selected1.setState(CardButton.CardButtonState.DEFAULT);
-            selected2.setState(CardButton.CardButtonState.DEFAULT);
+            PauseTransition pause = new PauseTransition(Duration.seconds(0.7));
+            pause.setOnFinished(e ->{
+                selected1.setState(CardButton.CardButtonState.DEFAULT);
+                selected2.setState(CardButton.CardButtonState.DEFAULT);
+                selected1 = null;
+                selected2 = null;
+            });
+            pause.play();
         }
-        selected1 = null;
-        selected2 = null;
     }
 
     private File getFileFromURL(String path) {

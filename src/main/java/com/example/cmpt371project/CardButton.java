@@ -86,7 +86,8 @@ public class CardButton extends Button {
             this.setGraphic(cardBack);
         }
         else if(state == CardButtonState.NOT_IN_PLAY){
-            this.setGraphic(null);
+            this.setDisable(true);
+            this.setVisible(false);
         }
         this.state = state;
     }
