@@ -9,9 +9,11 @@ package com.example.cmpt371project;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.Border;
 
 public class CardButton extends Button {
-    public enum CardButtonSate {
+    public enum CardButtonState {
         DEFAULT,
         FLIPPED,
         NOT_IN_PLAY
@@ -23,33 +25,31 @@ public class CardButton extends Button {
     private String value;
     private ImageView cardFront;
     private ImageView cardBack;
-    private CardButtonSate state;
-    private static final String CARD_BACK_FILE_IMAGE = "/img/backs/black_joker.png";
+    private CardButtonState state;
+    private static final String CARD_BACK_FILE_IMAGE = "/img/backs/card_back.png";
+    private static final int CARD_SIZE = 125;
 
     public CardButton(ImageView cardFront, String value) {
         super();
+        this.borderProperty();
         this.value = value;
+        this.setBackground(Background.EMPTY);
 
-        setOnAction(this);
         this.cardBack = new ImageView(getClass().getResource(CARD_BACK_FILE_IMAGE).toExternalForm());;
-        cardBack.setFitHeight(80);
+        cardBack.setFitHeight(CARD_SIZE);
         cardBack.setPreserveRatio(true);
         this.setGraphic(cardBack);
-        this.state = CardButtonSate.DEFAULT;
+        this.state = CardButtonState.DEFAULT;
 
         this.cardFront = cardFront;
-        cardFront.setFitHeight(80);
+        cardFront.setFitHeight(CARD_SIZE);
         cardFront.setPreserveRatio(true);
     }
 
-    public CardButton(String s, Node node, String value, ImageView cardFront, CardButtonSate state) {
+    public CardButton(String s, Node node, String value, ImageView cardFront, CardButtonState state) {
         super(s, node);
         this.value = value;
 
-
-    }
-
-    private void setOnAction(Button clickedButton) {
 
     }
 
@@ -77,11 +77,18 @@ public class CardButton extends Button {
         this.cardBack = cardBack;
     }
 
-    public CardButtonSate getState() {
+    public CardButtonState getState() {
         return state;
     }
 
-    public void setState(CardButtonSate state) {
+    public void setState(CardButtonState state) {
+        if(state == CardButtonState.DEFAULT){
+            this.setGraphic(cardBack);
+        }
+        else if(state == CardButtonState.NOT_IN_PLAY){
+            this.setDisable(true);
+            this.setVisible(false);
+        }
         this.state = state;
     }
 

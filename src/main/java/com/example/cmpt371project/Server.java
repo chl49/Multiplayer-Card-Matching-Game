@@ -58,8 +58,7 @@ public class Server implements Runnable{
                     GameBoard game = new GameBoard();
                     game.start();
                     //Get gameBoard data
-                    String[] data = game.getCardValues();
-                    String msg = String.join(",",data);
+                    String msg = game.getGameBoard();
                     System.out.println(msg);
                     byte[] buffer_cast = msg.getBytes();
                     //Send Data to other players
