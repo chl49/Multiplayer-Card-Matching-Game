@@ -39,7 +39,6 @@ public class GameBoard extends Application {
     private Label playerFourScoreLabel = new Label("Player 4: \t0");
     GridPane gridPane = new GridPane();
     String cardName;
-    int score = 0;
     CardButton selected1;
     CardButton selected2;
 
@@ -155,7 +154,6 @@ public class GameBoard extends Application {
     private void checkForMatch() {
         if(selected1.getId().equals(selected2.getId()) && selected1 != selected2){
             System.out.println("Its a match!");
-            score++;
             PauseTransition pause = new PauseTransition(Duration.seconds(0.7));
             pause.setOnFinished(e ->{
                 selected1.setState(CardButton.CardButtonState.NOT_IN_PLAY);
