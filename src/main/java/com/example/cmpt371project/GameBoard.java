@@ -2,6 +2,8 @@ package com.example.cmpt371project;
 
 import javafx.animation.PauseTransition;
 import javafx.application.Application;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -33,10 +35,16 @@ public class GameBoard extends Application {
     private static final int GRID_PANE_HORIZONTAL_SPACING = 0;
     private static final int GRID_PANE_BORDER_SPACING = 15;
     private static final int MAX_COLUMNS = 8;
-    private Label playerOneScoreLabel = new Label("Player 1: \t0");
-    private Label playerTwoScoreLabel = new Label("Player 2: \t0");
-    private Label playerThreeScoreLabel = new Label("Player 3: \t0");
-    private Label playerFourScoreLabel = new Label("Player 4: \t0");
+    private static final String DEFAULT_SCORE_STRING = "Player %s: \t%o";
+    private StringProperty playerOneTextScore = new SimpleStringProperty("Player 1: \t%o");
+    private Label playerOneScoreLabel = new Label(playerOneTextScore.toString());
+    private int playerOneScore = 0;
+    private Label playerTwoScoreLabel = new Label("Player 2: \t%o");
+    private int playerTwoScore = 0;
+    private Label playerThreeScoreLabel = new Label("Player 3: \t%o");
+    private int playerThreeScore = 0;
+    private Label playerFourScoreLabel = new Label("Player 4: \t%o");
+    private int playerFourScore = 0;
     GridPane gridPane = new GridPane();
     String cardName;
     CardButton selected1;
@@ -44,6 +52,7 @@ public class GameBoard extends Application {
 
     public void start(Stage stage) {
         stage.setTitle("Match!");
+        playerOneScoreLabel.textProperty().bind(playerOneTextScore);
 
         // Gets all files from resources -> img -> fronts
         String[] imageNames = getListOfFileNames(CARD_FRONT_PATH);
@@ -76,6 +85,11 @@ public class GameBoard extends Application {
         SplitPane root = new SplitPane();
         root.setOrientation(Orientation.HORIZONTAL);
         VBox playerScores = new VBox();
+
+        playerOneTextScore.setValue(formatStringForScoreLabel("1", playerOneScore));
+//        playerTwoScoreLabel.setText(formatStringForScoreLabel(playerTwoScoreLabel, 0));
+//        playerThreeScoreLabel.setText(formatStringForScoreLabel(playerThreeScoreLabel, 0));
+//        playerFourScoreLabel.setText(formatStringForScoreLabel(playerFourScoreLabel, 0));
         playerScores.getChildren().add(0, playerFourScoreLabel);
         playerScores.getChildren().add(0, playerThreeScoreLabel);
         playerScores.getChildren().add(0, playerTwoScoreLabel);
@@ -92,6 +106,10 @@ public class GameBoard extends Application {
 
     public static void main(String[] args) {
         launch();
+    }
+
+    private String formatStringForScoreLabel(String playerNumber, int score) {
+        return String.format(DEFAULT_SCORE_STRING, playerNumber, score);
     }
 
     private void addButton(LinkedHashMap<String, Integer> cardMap, int numOfColumns, int buttonId) {
@@ -159,6 +177,9 @@ public class GameBoard extends Application {
                 selected2.setState(CardButton.CardButtonState.NOT_IN_PLAY);
                 selected1 = null;
                 selected2 = null;
+                playerOneScore++;
+                playerOneTextScore.setValue(formatStringForScoreLabel("1", playerOneScore));
+                playerOneScoreLabel.setText("FUSDFUISDF");
             });
             pause.play();
         }
