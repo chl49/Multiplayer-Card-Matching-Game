@@ -1,9 +1,13 @@
 package com.example.cmpt371project;
 
+import javafx.application.Platform;
+import javafx.stage.Stage;
+
 import java.io.*; import java.net.*;
 public class Client implements Runnable
 {
     private String getIP;
+    public GameBoard game = new GameBoard();
     public Client(String getIP){
         this.getIP = getIP;
     }
@@ -39,15 +43,17 @@ public class Client implements Runnable
                 socket.receive(packet_in);
                 Response = new String(packet_in.getData()).trim();
                 String[] data = Response.split(",");
-                for (int i = 0; i < data.length; i++){
-                    System.out.println("data:" +data[i]);
-                }
+//                for (int i = 0; i < data.length; i++){
+//                    System.out.println("data:" +data[i]);
+//                }
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        game.clientStart(new Stage(), data);
+                    }
+                });
+
             }
-            /*
-            Gameboard.Clientstart(Data);
-            while (gameNotFinished)
-                msg = send id;
-            **/
             socket.close();
         } catch (IOException e) {
             throw new RuntimeException(e);

@@ -26,7 +26,7 @@ import java.util.*;
 import static java.util.Arrays.asList;
 
 
-public class GameBoard extends Application {
+public class GameBoard {
     private final int TOTAL_NUMBER_OF_CARDS = 40;
     private int row = 0;
     private int column = 0;
@@ -36,28 +36,26 @@ public class GameBoard extends Application {
     private static final int GRID_PANE_BORDER_SPACING = 15;
     private static final int MAX_COLUMNS = 8;
     private static final String DEFAULT_SCORE_STRING = "Player %s: \t%o";
-    private StringProperty playerOneTextScore = new SimpleStringProperty("Player 1: \t%o");
-    private Label playerOneScoreLabel = new Label(playerOneTextScore.toString());
+    private StringProperty playerOneTextScore = new SimpleStringProperty();
+    private Label playerOneScoreLabel = new Label();
     private int playerOneScore = 0;
-    private StringProperty playerTwoTextScore = new SimpleStringProperty("Player 2: \t%o");
-    private Label playerTwoScoreLabel = new Label("Player 2: \t%o");
+    private StringProperty playerTwoTextScore = new SimpleStringProperty();
+    private Label playerTwoScoreLabel = new Label();
     private int playerTwoScore = 0;
-    private StringProperty playerThreeTextScore = new SimpleStringProperty("Player 3: \t%o");
-    private Label playerThreeScoreLabel = new Label("Player 3: \t%o");
+    private StringProperty playerThreeTextScore = new SimpleStringProperty();
+    private Label playerThreeScoreLabel = new Label();
     private int playerThreeScore = 0;
-    private StringProperty playerFourTextScore = new SimpleStringProperty("Player 4: \t%o");
-    private Label playerFourScoreLabel = new Label("Player 4: \t%o");
+    private StringProperty playerFourTextScore = new SimpleStringProperty();
+    private Label playerFourScoreLabel = new Label();
     private int playerFourScore = 0;
 
+    private String gameBoard;
     GridPane gridPane = new GridPane();
     String cardName;
     CardButton selected1;
     CardButton selected2;
 
-    public void start(Stage stage) {
-        stage.setTitle("Match!");
-        playerOneScoreLabel.textProperty().bind(playerOneTextScore);
-
+    public void start() {
         // Gets all files from resources -> img -> fronts
         String[] imageNames = getListOfFileNames(CARD_FRONT_PATH);
         Collections.shuffle(asList(imageNames));
@@ -76,6 +74,58 @@ public class GameBoard extends Application {
         }
 
         // Container that holds the game board (grid pane)
+        // Sets spacing between cards
+        gameBoard = getGameBoardAsString(gridPane);
+    }
+
+    public void clientStart(Stage stage, String[] data) {
+        stage.setTitle("Match!");
+
+        // Gets all files from resources -> img -> fronts
+        String[] imageNames = getListOfFileNames(CARD_FRONT_PATH);
+        Collections.shuffle(asList(imageNames));
+
+        int buttonId = 0;
+
+        // Add cards to the grid pane
+        for(int x = 0; x < TOTAL_NUMBER_OF_CARDS; x++) {
+            column++;
+            if(column > 8) {
+                column = 1;
+                row++;
+            }
+            String card = data[x] + ".png";
+            CardButton button = new CardButton(new ImageView(getClass().getResource("/img/fronts/" + card).toExternalForm()), data[x]);
+            button.setId("" + buttonId);
+            button.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    switch(button.getState()) {
+                        case DEFAULT -> {
+                            //System.out.println("Flipping card");
+                            if(selected1 == null || selected2 == null) {
+                                button.setGraphic(button.getCardFront());
+                                button.setState(CardButton.CardButtonState.FLIPPED);
+                            }
+                        }
+                        case FLIPPED -> {
+                            System.out.println("Card is already flipped select a different card.");
+                        }
+                        case NOT_IN_PLAY -> {
+                            System.out.println("Card has already been used for a point.");
+                        }
+                    }
+                    handleCardMatching(button);
+                    //System.out.println("Card id:" + button.getId() + "\tValue:" + button.getValue());
+                }
+
+            });
+
+            gridPane.add(button, column, row);
+            buttonId++;
+        }
+
+        // Container that holds the game board (grid pane)
 
 
         // Sets spacing between cards
@@ -88,18 +138,9 @@ public class GameBoard extends Application {
 
         SplitPane root = new SplitPane();
         root.setOrientation(Orientation.HORIZONTAL);
-        VBox playerScores = new VBox();
+        VBox playerScoresVBox = setupScoreBoard(new VBox());
 
-        playerOneTextScore.setValue(formatStringForScoreLabel("1", playerOneScore));
-        playerTwoScoreLabel.setText(formatStringForScoreLabel("2", playerTwoScore));
-        playerThreeScoreLabel.setText(formatStringForScoreLabel("3", playerThreeScore));
-        playerFourScoreLabel.setText(formatStringForScoreLabel("4", playerFourScore));
-        playerScores.getChildren().add(0, playerFourScoreLabel);
-        playerScores.getChildren().add(0, playerThreeScoreLabel);
-        playerScores.getChildren().add(0, playerTwoScoreLabel);
-        playerScores.getChildren().add(0, playerOneScoreLabel);
-
-        root.getItems().add(0, playerScores);
+        root.getItems().add(0, playerScoresVBox);
         root.getItems().add(1, gridPane);
 
         Scene scene = new Scene(root);
@@ -108,9 +149,27 @@ public class GameBoard extends Application {
         getGameBoardAsString(gridPane);
     }
 
-    public static void main(String[] args) {
-        launch();
+    private VBox setupScoreBoard(VBox playerScoresVBox) {
+        playerOneScoreLabel.textProperty().bind(playerOneTextScore);
+        playerOneTextScore.setValue(formatStringForScoreLabel("1", playerOneScore));
+
+        playerTwoScoreLabel.textProperty().bind(playerTwoTextScore);
+        playerTwoTextScore.setValue(formatStringForScoreLabel("2", playerTwoScore));
+
+        playerThreeScoreLabel.textProperty().bind(playerThreeTextScore);
+        playerThreeTextScore.setValue(formatStringForScoreLabel("3", playerThreeScore));
+
+        playerFourScoreLabel.textProperty().bind(playerFourTextScore);
+        playerFourTextScore.setValue(formatStringForScoreLabel("4", playerFourScore));
+
+        playerScoresVBox.getChildren().add(0, playerFourScoreLabel);
+        playerScoresVBox.getChildren().add(0, playerThreeScoreLabel);
+        playerScoresVBox.getChildren().add(0, playerTwoScoreLabel);
+        playerScoresVBox.getChildren().add(0, playerOneScoreLabel);
+        return playerScoresVBox;
     }
+
+
 
     private String formatStringForScoreLabel(String playerNumber, int score) {
         return String.format(DEFAULT_SCORE_STRING, playerNumber, score);
@@ -162,7 +221,7 @@ public class GameBoard extends Application {
         gridPane.add(button, column, row);
     }
     public void handleCardMatching(CardButton buttonClicked) {
-        //System.out.println("Card id:" + buttonClicked.getId());
+        System.out.println("Card id:" + buttonClicked.getId() + " Val" + buttonClicked.getValue());
         if(selected1 == null && selected2 == null){
             selected1 = buttonClicked;
         }
@@ -173,7 +232,7 @@ public class GameBoard extends Application {
         //System.out.println("Score: " + score);
     }
     private void checkForMatch() {
-        if(selected1.getId().equals(selected2.getId()) && selected1 != selected2){
+        if(selected1.getValue().equals(selected2.getValue()) && selected1 != selected2){
             System.out.println("Its a match!");
             PauseTransition pause = new PauseTransition(Duration.seconds(0.7));
             pause.setOnFinished(e ->{
@@ -181,9 +240,10 @@ public class GameBoard extends Application {
                 selected2.setState(CardButton.CardButtonState.NOT_IN_PLAY);
                 selected1 = null;
                 selected2 = null;
+
+                // Change depending on which player got the point
                 playerOneScore++;
                 playerOneTextScore.setValue(formatStringForScoreLabel("1", playerOneScore));
-                playerOneScoreLabel.setText("FUSDFUISDF");
             });
             pause.play();
         }
@@ -231,4 +291,7 @@ public class GameBoard extends Application {
         return sb.toString();
     }
 
+    public String getGameBoard() {
+        return gameBoard;
+    }
 }
