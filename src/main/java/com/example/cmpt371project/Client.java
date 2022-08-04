@@ -7,6 +7,7 @@ import java.io.*; import java.net.*;
 public class Client implements Runnable
 {
     private String getIP;
+    public GameBoard game = new GameBoard();
     public Client(String getIP){
         this.getIP = getIP;
     }
@@ -45,19 +46,14 @@ public class Client implements Runnable
 //                for (int i = 0; i < data.length; i++){
 //                    System.out.println("data:" +data[i]);
 //                }
-                GameBoard game = new GameBoard();
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
                         game.clientStart(new Stage(), data);
                     }
                 });
+
             }
-            /*
-            Gameboard.Clientstart(Data);
-            while (gameNotFinished)
-                msg = send id;
-            **/
             socket.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
