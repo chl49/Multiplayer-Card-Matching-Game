@@ -4,6 +4,8 @@ import javafx.application.Platform;
 import javafx.stage.Stage;
 
 import java.io.*; import java.net.*;
+import java.util.Arrays;
+
 public class Client implements Runnable
 {
     private String getIP;
@@ -36,13 +38,13 @@ public class Client implements Runnable
                 System.out.println("Client is connected");
                 HelloApplication.setClientConnect(true);
             }
-
-            //NEW ###Herb: After being connected, Client waits for cards
-
             if(HelloApplication.getClientConnect()){
                 socket.receive(packet_in);
                 Response = new String(packet_in.getData()).trim();
-                String[] data = Response.split(",");
+                //NEW HERB With player number added
+                String[] playerData = Response.split(",");
+                int playerNum = Integer.parseInt((playerData[playerData.length - 1]));
+                String[] data = Arrays.copyOf(playerData, playerData.length - 1);
 //                for (int i = 0; i < data.length; i++){
 //                    System.out.println("data:" +data[i]);
 //                }
