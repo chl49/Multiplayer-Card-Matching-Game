@@ -11,7 +11,7 @@ public class Server implements Runnable{
     //Convert to thread eventually
     //player array variable to store players ports (only used for sending game board at the start)
     //
-    private final int MAX_PLAYERS = 1;
+    private final int MAX_PLAYERS = 2;
     private final DatagramPacket[] playerData = new DatagramPacket[MAX_PLAYERS];
     private int currentPlayers = 0;
     private boolean serverRunning = false;
@@ -60,9 +60,11 @@ public class Server implements Runnable{
                     //Get gameBoard data
                     String msg = game.getGameBoard();
                     System.out.println(msg);
-                    byte[] buffer_cast = msg.getBytes();
+
                     //Send Data to other players
                     for (int i = 0; i < MAX_PLAYERS; i++){
+                        String newMsg = Integer.toString(i) + "," + msg;
+                        byte[] buffer_cast = newMsg.getBytes();
                         InetAddress Add = playerData[i].getAddress();
                         int P = playerData[i].getPort();
                         DatagramPacket packet_cast = new DatagramPacket(buffer_cast, buffer_cast.length, Add, P);
@@ -71,7 +73,11 @@ public class Server implements Runnable{
                     }
                     gameNotFinished = true;
                     while (gameNotFinished) {
+                        byte[] buffer = new byte[256];
+                        packet_in = new DatagramPacket(buffer,buffer.length);
                         socket.receive(packet_in);
+                        msg = new String(packet_in.getData()).trim();
+                        System.out.println(msg);
                         //DO SMT
                     }
 

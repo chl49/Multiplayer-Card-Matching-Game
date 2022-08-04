@@ -3,10 +3,15 @@ package com.example.cmpt371project;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 
-import java.io.*; import java.net.*;
+import java.io.*;
+import java.lang.reflect.Array;
+import java.net.*;
+import java.util.Arrays;
+
 public class Client implements Runnable
 {
     private String getIP;
+    private final int PORT = 7070;
     public GameBoard game = new GameBoard();
     public Client(String getIP){
         this.getIP = getIP;
@@ -19,7 +24,7 @@ public class Client implements Runnable
             byte[] Buffer_out = Message.getBytes();
 
             InetAddress address = InetAddress.getByName(getIP); //Change to Input from string field
-            DatagramPacket packet_out = new DatagramPacket(Buffer_out, Buffer_out.length, address, 7070);
+            DatagramPacket packet_out = new DatagramPacket(Buffer_out, Buffer_out.length, address, PORT);
             // send data
             System.out.println("Sending to " + InetAddress.getLocalHost());
             socket.send(packet_out);
@@ -43,16 +48,22 @@ public class Client implements Runnable
                 socket.receive(packet_in);
                 Response = new String(packet_in.getData()).trim();
                 String[] data = Response.split(",");
+                String[] gameboard = Arrays.copyOfRange(data, 1, data.length);
 //                for (int i = 0; i < data.length; i++){
 //                    System.out.println("data:" +data[i]);
 //                }
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
-                        game.clientStart(new Stage(), data);
+                        game.clientStart(new Stage(), gameboard, address, PORT, Integer.parseInt(data[0]));
+
                     }
                 });
-
+                while (true){
+                    socket.receive(packet_in);
+                    Response = new String(packet_in.getData()).trim();
+                    System.out.println(Response);
+                }
             }
             socket.close();
         } catch (IOException e) {
