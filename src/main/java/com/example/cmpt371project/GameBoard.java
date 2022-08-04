@@ -86,7 +86,7 @@ public class GameBoard {
             }
             String card = data[x] + ".png";
             CardButton button = new CardButton(new ImageView(getClass().getResource("/img/fronts/" + card).toExternalForm()), data[x]);
-            button.setId(card);
+            button.setId("" + buttonId);
             button.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent actionEvent) {
@@ -192,7 +192,7 @@ public class GameBoard {
         gridPane.add(button, column, row);
     }
     public void handleCardMatching(CardButton buttonClicked) {
-        //System.out.println("Card id:" + buttonClicked.getId());
+        System.out.println("Card id:" + buttonClicked.getId() + " Val" + buttonClicked.getValue());
         if(selected1 == null && selected2 == null){
             selected1 = buttonClicked;
         }
@@ -203,7 +203,7 @@ public class GameBoard {
         //System.out.println("Score: " + score);
     }
     private void checkForMatch() {
-        if(selected1.getId().equals(selected2.getId()) && selected1 != selected2){
+        if(selected1.getValue().equals(selected2.getValue()) && selected1 != selected2){
             System.out.println("Its a match!");
             PauseTransition pause = new PauseTransition(Duration.seconds(0.7));
             pause.setOnFinished(e ->{
