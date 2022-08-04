@@ -35,7 +35,7 @@ public class GameBoard {
     private static final int GRID_PANE_HORIZONTAL_SPACING = 0;
     private static final int GRID_PANE_BORDER_SPACING = 15;
     private static final int MAX_COLUMNS = 8;
-    private static final String DEFAULT_SCORE_STRING = "Player %s: \t%o";
+    private static final String DEFAULT_SCORE_STRING = "Player %s: \t%o          ";
     private StringProperty playerOneTextScore = new SimpleStringProperty();
     private Label playerOneScoreLabel = new Label();
     private int playerOneScore = 0;
