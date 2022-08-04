@@ -35,7 +35,7 @@ public class CardButton extends Button {
         this.value = value;
         this.setBackground(Background.EMPTY);
 
-        this.cardBack = new ImageView(getClass().getResource(CARD_BACK_FILE_IMAGE).toExternalForm());;
+        this.cardBack = new ImageView(getClass().getResource(CARD_BACK_FILE_IMAGE).toExternalForm());
         cardBack.setFitHeight(CARD_SIZE);
         cardBack.setPreserveRatio(true);
         this.setGraphic(cardBack);
@@ -84,6 +84,9 @@ public class CardButton extends Button {
     public void setState(CardButtonState state) {
         if(state == CardButtonState.DEFAULT){
             this.setGraphic(cardBack);
+        }
+        else if(state == CardButtonState.FLIPPED){
+            this.setGraphic(cardFront);
         }
         else if(state == CardButtonState.NOT_IN_PLAY){
             this.setDisable(true);
