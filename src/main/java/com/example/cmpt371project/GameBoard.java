@@ -24,7 +24,7 @@ import java.util.*;
 import static java.util.Arrays.asList;
 
 
-public class GameBoard extends Application {
+public class GameBoard {
     private final int TOTAL_NUMBER_OF_CARDS = 40;
     private int row = 0;
     private int column = 0;
@@ -37,13 +37,14 @@ public class GameBoard extends Application {
     private Label playerTwoScoreLabel = new Label("Player 2: \t0");
     private Label playerThreeScoreLabel = new Label("Player 3: \t0");
     private Label playerFourScoreLabel = new Label("Player 4: \t0");
+
+    private String gameBoard;
     GridPane gridPane = new GridPane();
     String cardName;
     CardButton selected1;
     CardButton selected2;
 
-    public void start(Stage stage) {
-        stage.setTitle("Match!");
+    public void start() {
 
         // Gets all files from resources -> img -> fronts
         String[] imageNames = getListOfFileNames(CARD_FRONT_PATH);
@@ -59,6 +60,58 @@ public class GameBoard extends Application {
         // Add cards to the grid pane
         for(int x = 0; x < TOTAL_NUMBER_OF_CARDS; x++) {
             addButton(cardCount, MAX_COLUMNS, buttonId);
+            buttonId++;
+        }
+
+        // Container that holds the game board (grid pane)
+        // Sets spacing between cards
+        gameBoard = getGameBoardAsString(gridPane);
+    }
+
+    public void clientStart(Stage stage, String[] data) {
+        stage.setTitle("Match!");
+
+        // Gets all files from resources -> img -> fronts
+        String[] imageNames = getListOfFileNames(CARD_FRONT_PATH);
+        Collections.shuffle(asList(imageNames));
+
+        int buttonId = 0;
+
+        // Add cards to the grid pane
+        for(int x = 0; x < TOTAL_NUMBER_OF_CARDS; x++) {
+            column++;
+            if(column > 8) {
+                column = 1;
+                row++;
+            }
+            String card = data[x] + ".png";
+            CardButton button = new CardButton(new ImageView(getClass().getResource("/img/fronts/" + card).toExternalForm()), data[x]);
+            button.setId("" + buttonId);
+            button.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    switch(button.getState()) {
+                        case DEFAULT -> {
+                            //System.out.println("Flipping card");
+                            if(selected1 == null || selected2 == null) {
+                                button.setGraphic(button.getCardFront());
+                                button.setState(CardButton.CardButtonState.FLIPPED);
+                            }
+                        }
+                        case FLIPPED -> {
+                            System.out.println("Card is already flipped select a different card.");
+                        }
+                        case NOT_IN_PLAY -> {
+                            System.out.println("Card has already been used for a point.");
+                        }
+                    }
+                    handleCardMatching(button);
+                    //System.out.println("Card id:" + button.getId() + "\tValue:" + button.getValue());
+                }
+
+            });
+
+            gridPane.add(button, column, row);
             buttonId++;
         }
 
@@ -90,9 +143,7 @@ public class GameBoard extends Application {
         getGameBoardAsString(gridPane);
     }
 
-    public static void main(String[] args) {
-        launch();
-    }
+
 
     private void addButton(LinkedHashMap<String, Integer> cardMap, int numOfColumns, int buttonId) {
         column++;
@@ -140,7 +191,7 @@ public class GameBoard extends Application {
         gridPane.add(button, column, row);
     }
     public void handleCardMatching(CardButton buttonClicked) {
-        //System.out.println("Card id:" + buttonClicked.getId());
+        System.out.println("Card id:" + buttonClicked.getId() + " Val" + buttonClicked.getValue());
         if(selected1 == null && selected2 == null){
             selected1 = buttonClicked;
         }
@@ -151,7 +202,7 @@ public class GameBoard extends Application {
         //System.out.println("Score: " + score);
     }
     private void checkForMatch() {
-        if(selected1.getId().equals(selected2.getId()) && selected1 != selected2){
+        if(selected1.getValue().equals(selected2.getValue()) && selected1 != selected2){
             System.out.println("Its a match!");
             PauseTransition pause = new PauseTransition(Duration.seconds(0.7));
             pause.setOnFinished(e ->{
@@ -206,4 +257,7 @@ public class GameBoard extends Application {
         return sb.toString();
     }
 
+    public String getGameBoard() {
+        return gameBoard;
+    }
 }

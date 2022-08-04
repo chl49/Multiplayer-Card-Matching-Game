@@ -2,20 +2,20 @@ package com.example.cmpt371project;
 
 import java.io.*;
 import java.net.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
 
 import com.example.cmpt371project.*;
+import javafx.stage.Stage;
 
 public class Server implements Runnable{
     //Convert to thread eventually
     //player array variable to store players ports (only used for sending game board at the start)
     //
-    private final int MAX_PLAYERS = 4;
-    private DatagramPacket[] playerData = new DatagramPacket[MAX_PLAYERS];
+    private final int MAX_PLAYERS = 1;
+    private final DatagramPacket[] playerData = new DatagramPacket[MAX_PLAYERS];
     private int currentPlayers = 0;
     private boolean serverRunning = false;
-    private boolean broadcast = false;
+    private boolean gameNotFinished = false;
 
     public void run() {
         try {
@@ -54,29 +54,27 @@ public class Server implements Runnable{
                 }
                 if (currentPlayers >= MAX_PLAYERS){
                     //Launch host game
-                    // Gameboard.hostStart();
+                    //Gameboard.hostStart();
+                    GameBoard game = new GameBoard();
+                    game.start();
                     //Get gameBoard data
-                    String[] data = {"Card","Order","here"}; //data = GameBoard.getBoard();
-                    String msg = String.join(",",data);
+                    String msg = game.getGameBoard();
+                    System.out.println(msg);
                     byte[] buffer_cast = msg.getBytes();
                     //Send Data to other players
                     for (int i = 0; i < MAX_PLAYERS; i++){
-                        InetAddress  Add= playerData[i].getAddress();
+                        InetAddress Add = playerData[i].getAddress();
                         int P = playerData[i].getPort();
                         DatagramPacket packet_cast = new DatagramPacket(buffer_cast, buffer_cast.length, Add, P);
                         System.out.println("Sending to " + Add + " on port: " + P);
                         socket.send(packet_cast); // send data
                     }
-                    /*
-                    while gameNOtFinished
-                        wait on reply
-                        recieve data
-                        lock buttons
-                        do game logic
-                        send reply lock/unlock
+                    gameNotFinished = true;
+                    while (gameNotFinished) {
+                        socket.receive(packet_in);
+                        //DO SMT
+                    }
 
-
-                    **/
                 }
             }
         } catch (IOException e) {
