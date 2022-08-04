@@ -26,7 +26,7 @@ public class CardButton extends Button {
     private ImageView cardFront;
     private ImageView cardBack;
     private CardButtonState state;
-    private static final String CARD_BACK_FILE_IMAGE = "/img/backs/card_back.png";
+    private static final String CARD_BACK_FILE_IMAGE = "/img/backs/eecs_shervin_shirmohammadi.jpg";
     private static final int CARD_SIZE = 125;
 
     public CardButton(ImageView cardFront, String value) {
