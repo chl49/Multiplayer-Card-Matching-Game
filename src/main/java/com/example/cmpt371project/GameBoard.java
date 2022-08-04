@@ -39,12 +39,16 @@ public class GameBoard extends Application {
     private StringProperty playerOneTextScore = new SimpleStringProperty("Player 1: \t%o");
     private Label playerOneScoreLabel = new Label(playerOneTextScore.toString());
     private int playerOneScore = 0;
+    private StringProperty playerTwoTextScore = new SimpleStringProperty("Player 2: \t%o");
     private Label playerTwoScoreLabel = new Label("Player 2: \t%o");
     private int playerTwoScore = 0;
+    private StringProperty playerThreeTextScore = new SimpleStringProperty("Player 3: \t%o");
     private Label playerThreeScoreLabel = new Label("Player 3: \t%o");
     private int playerThreeScore = 0;
+    private StringProperty playerFourTextScore = new SimpleStringProperty("Player 4: \t%o");
     private Label playerFourScoreLabel = new Label("Player 4: \t%o");
     private int playerFourScore = 0;
+
     GridPane gridPane = new GridPane();
     String cardName;
     CardButton selected1;
@@ -87,9 +91,9 @@ public class GameBoard extends Application {
         VBox playerScores = new VBox();
 
         playerOneTextScore.setValue(formatStringForScoreLabel("1", playerOneScore));
-//        playerTwoScoreLabel.setText(formatStringForScoreLabel(playerTwoScoreLabel, 0));
-//        playerThreeScoreLabel.setText(formatStringForScoreLabel(playerThreeScoreLabel, 0));
-//        playerFourScoreLabel.setText(formatStringForScoreLabel(playerFourScoreLabel, 0));
+        playerTwoScoreLabel.setText(formatStringForScoreLabel("2", playerTwoScore));
+        playerThreeScoreLabel.setText(formatStringForScoreLabel("3", playerThreeScore));
+        playerFourScoreLabel.setText(formatStringForScoreLabel("4", playerFourScore));
         playerScores.getChildren().add(0, playerFourScoreLabel);
         playerScores.getChildren().add(0, playerThreeScoreLabel);
         playerScores.getChildren().add(0, playerTwoScoreLabel);
