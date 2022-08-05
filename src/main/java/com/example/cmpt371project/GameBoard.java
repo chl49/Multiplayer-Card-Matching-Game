@@ -2,6 +2,8 @@ package com.example.cmpt371project;
 
 import javafx.animation.PauseTransition;
 import javafx.application.Application;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -34,10 +36,19 @@ public class GameBoard {
     private static final int GRID_PANE_HORIZONTAL_SPACING = 0;
     private static final int GRID_PANE_BORDER_SPACING = 15;
     private static final int MAX_COLUMNS = 8;
-    private Label playerOneScoreLabel = new Label("Player 1: \t0");
-    private Label playerTwoScoreLabel = new Label("Player 2: \t0");
-    private Label playerThreeScoreLabel = new Label("Player 3: \t0");
-    private Label playerFourScoreLabel = new Label("Player 4: \t0");
+    private static final String DEFAULT_SCORE_STRING = "Player %s: \t%o          ";
+    private StringProperty playerOneTextScore = new SimpleStringProperty();
+    private Label playerOneScoreLabel = new Label();
+    private int playerOneScore = 0;
+    private StringProperty playerTwoTextScore = new SimpleStringProperty();
+    private Label playerTwoScoreLabel = new Label();
+    private int playerTwoScore = 0;
+    private StringProperty playerThreeTextScore = new SimpleStringProperty();
+    private Label playerThreeScoreLabel = new Label();
+    private int playerThreeScore = 0;
+    private StringProperty playerFourTextScore = new SimpleStringProperty();
+    private Label playerFourScoreLabel = new Label();
+    private int playerFourScore = 0;
 
     private String gameBoard;
     GridPane gridPane = new GridPane();
@@ -51,7 +62,6 @@ public class GameBoard {
     private InetAddress hostAddress;
     private int hostPort;
     public void start() {
-
         // Gets all files from resources -> img -> fronts
         String[] imageNames = getListOfFileNames(CARD_FRONT_PATH);
         Collections.shuffle(asList(imageNames));
@@ -140,13 +150,9 @@ public class GameBoard {
 
         SplitPane root = new SplitPane();
         root.setOrientation(Orientation.HORIZONTAL);
-        VBox playerScores = new VBox();
-        playerScores.getChildren().add(0, playerFourScoreLabel);
-        playerScores.getChildren().add(0, playerThreeScoreLabel);
-        playerScores.getChildren().add(0, playerTwoScoreLabel);
-        playerScores.getChildren().add(0, playerOneScoreLabel);
+        VBox playerScoresVBox = setupScoreBoard(new VBox());
 
-        root.getItems().add(0, playerScores);
+        root.getItems().add(0, playerScoresVBox);
         root.getItems().add(1, gridPane);
 
         Scene scene = new Scene(root);
@@ -155,7 +161,31 @@ public class GameBoard {
         getGameBoardAsString(gridPane);
     }
 
+    private VBox setupScoreBoard(VBox playerScoresVBox) {
+        playerOneScoreLabel.textProperty().bind(playerOneTextScore);
+        playerOneTextScore.setValue(formatStringForScoreLabel("1", playerOneScore));
 
+        playerTwoScoreLabel.textProperty().bind(playerTwoTextScore);
+        playerTwoTextScore.setValue(formatStringForScoreLabel("2", playerTwoScore));
+
+        playerThreeScoreLabel.textProperty().bind(playerThreeTextScore);
+        playerThreeTextScore.setValue(formatStringForScoreLabel("3", playerThreeScore));
+
+        playerFourScoreLabel.textProperty().bind(playerFourTextScore);
+        playerFourTextScore.setValue(formatStringForScoreLabel("4", playerFourScore));
+
+        playerScoresVBox.getChildren().add(0, playerFourScoreLabel);
+        playerScoresVBox.getChildren().add(0, playerThreeScoreLabel);
+        playerScoresVBox.getChildren().add(0, playerTwoScoreLabel);
+        playerScoresVBox.getChildren().add(0, playerOneScoreLabel);
+        return playerScoresVBox;
+    }
+
+
+
+    private String formatStringForScoreLabel(String playerNumber, int score) {
+        return String.format(DEFAULT_SCORE_STRING, playerNumber, score);
+    }
 
     private void addButton(LinkedHashMap<String, Integer> cardMap, int numOfColumns, int buttonId) {
         column++;
@@ -222,6 +252,10 @@ public class GameBoard {
                 sendMessage(selected1, "match");
                 selected1 = null;
                 selected2 = null;
+
+                // Change depending on which player got the point
+                playerOneScore++;
+                playerOneTextScore.setValue(formatStringForScoreLabel("1", playerOneScore));
             });
             pause.play();
         }

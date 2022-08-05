@@ -10,12 +10,12 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
-import javafx.scene.layout.Border;
 
 public class CardButton extends Button {
     public enum CardButtonState {
         DEFAULT,
         FLIPPED,
+        IN_USE,
         NOT_IN_PLAY
     }
 
@@ -49,8 +49,6 @@ public class CardButton extends Button {
     public CardButton(String s, Node node, String value, ImageView cardFront, CardButtonState state) {
         super(s, node);
         this.value = value;
-
-
     }
 
     public String getValue() {
@@ -84,14 +82,24 @@ public class CardButton extends Button {
     public void setState(CardButtonState state) {
         if(state == CardButtonState.DEFAULT){
             this.setGraphic(cardBack);
+            this.setDisable(false);
         }
+
         else if(state == CardButtonState.FLIPPED){
             this.setGraphic(cardFront);
+            this.setDisable(true);
         }
+
         else if(state == CardButtonState.NOT_IN_PLAY){
             this.setDisable(true);
             this.setVisible(false);
         }
+
+        else if(state == CardButtonState.IN_USE) {
+            this.setGraphic(cardBack);
+            this.setDisable(true);
+        }
+
         this.state = state;
     }
 
