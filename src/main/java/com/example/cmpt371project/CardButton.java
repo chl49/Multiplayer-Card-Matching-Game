@@ -49,8 +49,6 @@ public class CardButton extends Button {
     public CardButton(String s, Node node, String value, ImageView cardFront, CardButtonState state) {
         super(s, node);
         this.value = value;
-
-
     }
 
     public String getValue() {

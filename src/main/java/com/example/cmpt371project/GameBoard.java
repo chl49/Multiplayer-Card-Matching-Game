@@ -51,6 +51,7 @@ public class GameBoard {
 
     private String gameBoard;
     GridPane gridPane = new GridPane();
+    ArrayList<CardButton> allButtons = new ArrayList<>();
     String cardName;
     CardButton selected1;
     CardButton selected2;
@@ -75,6 +76,9 @@ public class GameBoard {
 
         // Container that holds the game board (grid pane)
         // Sets spacing between cards
+        for(CardButton cardButton: allButtons){
+            System.out.println("Array print: " + cardButton.getId());
+        }
         gameBoard = getGameBoardAsString(gridPane);
     }
 
@@ -120,7 +124,7 @@ public class GameBoard {
                 }
 
             });
-
+            allButtons.add(button);
             gridPane.add(button, column, row);
             buttonId++;
         }
@@ -294,4 +298,36 @@ public class GameBoard {
     public String getGameBoard() {
         return gameBoard;
     }
+    // functions that handle updates from server
+    public void removeCards(String buttonid1, String buttonid2){
+
+    }
+    public void lockCard(String buttonid1){
+
+    }
+    public void releaseCards(String buttonid1, String buttonid2){
+
+    }
+    public void updateScore(String playerNumberString){
+        int playerNum = Integer.parseInt(playerNumberString);
+        switch(playerNum){
+            case 1:
+                playerOneScore++;
+                playerOneTextScore.setValue(formatStringForScoreLabel(playerNumberString, playerOneScore));
+                break;
+            case 2:
+                playerTwoScore++;
+                playerTwoTextScore.setValue(formatStringForScoreLabel(playerNumberString, playerTwoScore));
+                break;
+            case 3:
+                playerThreeScore++;
+                playerThreeTextScore.setValue(formatStringForScoreLabel(playerNumberString, playerThreeScore));
+                break;
+            case 4:
+                playerFourScore++;
+                playerFourTextScore.setValue(formatStringForScoreLabel(playerNumberString, playerFourScore));
+                break;
+        }
+    }
+
 }

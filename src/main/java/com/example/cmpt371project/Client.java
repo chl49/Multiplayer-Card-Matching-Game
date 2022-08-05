@@ -17,7 +17,6 @@ public class Client implements Runnable
             // prepare data to be sent
             String Message = "Join";
             byte[] Buffer_out = Message.getBytes();
-
             InetAddress address = InetAddress.getByName(getIP); //Change to Input from string field
             DatagramPacket packet_out = new DatagramPacket(Buffer_out, Buffer_out.length, address, 7070);
             // send data
@@ -59,5 +58,28 @@ public class Client implements Runnable
             throw new RuntimeException(e);
         }
     }
-
+    public void receiveUpdateFromServer(String[] message){
+        String buttonid1;
+        String buttonid2;
+        String playerNumberString;
+        switch(message[0]){
+            case "match":
+                buttonid1 = message[1];
+                buttonid2 = message[2];
+                game.removeCards(buttonid1, buttonid2);
+                break;
+            case "lock":
+                buttonid1 = message[1];
+                game.lockCard(buttonid1);
+                break;
+            case "release":
+                buttonid1 = message[1];
+                buttonid2 = message[2];
+                game.releaseCards(buttonid1, buttonid2);
+            case "score":
+                playerNumberString = message[1];
+                game.updateScore(playerNumberString);
+                break;
+        }
+    }
 }
