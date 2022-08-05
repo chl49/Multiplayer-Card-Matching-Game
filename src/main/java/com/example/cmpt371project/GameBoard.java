@@ -304,7 +304,7 @@ public class GameBoard {
         return sb.toString();
     }
     private void sendMessage(Button button, String command) {
-        DatagramSocket socket = null;
+        DatagramSocket socket;
         try {
             socket = new DatagramSocket();
         } catch (SocketException e) {

@@ -57,6 +57,7 @@ public class Server implements Runnable{
                 socket.receive(packet_in);
 
                 String IncomingData = new String(packet_in.getData()).trim();
+                System.out.println(IncomingData);
                 if (IncomingData.equals("Join")) {
 
                     System.out.println("Storing add " + packet_in.getAddress() + " with port: " + packet_in.getPort());

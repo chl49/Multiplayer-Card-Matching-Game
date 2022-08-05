@@ -57,7 +57,7 @@ public class Client implements Runnable
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
-                        game.clientStart(new Stage(), gameboard, address, PORT, Integer.parseInt(data[0]));
+                        game.clientStart(new Stage(), data, address, PORT, playerNum);
 
                     }
                 });
