@@ -3,12 +3,13 @@ package com.example.cmpt371project;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 
+<<<<<<<<< Temporary merge branch 1
+import java.io.*; import java.net.*;
+=========
 import java.io.*;
 import java.lang.reflect.Array;
 import java.net.*;
-import java.util.Arrays;
-
-import java.io.*; import java.net.*;
+>>>>>>>>> Temporary merge branch 2
 import java.util.Arrays;
 
 public class Client implements Runnable
@@ -47,10 +48,15 @@ public class Client implements Runnable
             if(HelloApplication.getClientConnect()){
                 socket.receive(packet_in);
                 Response = new String(packet_in.getData()).trim();
+<<<<<<<<< Temporary merge branch 1
                 //NEW HERB With player number added
                 String[] playerData = Response.split(",");
                 int playerNum = Integer.parseInt((playerData[playerData.length - 1]));
                 String[] data = Arrays.copyOf(playerData, playerData.length - 1);
+=========
+                String[] data = Response.split(",");
+                String[] gameboard = Arrays.copyOfRange(data, 1, data.length);
+>>>>>>>>> Temporary merge branch 2
 //                for (int i = 0; i < data.length; i++){
 //                    System.out.println("data:" +data[i]);
 //                }
