@@ -3,12 +3,19 @@ package com.example.cmpt371project;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 
+<<<<<<<<< Temporary merge branch 1
 import java.io.*; import java.net.*;
+=========
+import java.io.*;
+import java.lang.reflect.Array;
+import java.net.*;
+>>>>>>>>> Temporary merge branch 2
 import java.util.Arrays;
 
 public class Client implements Runnable
 {
     private String getIP;
+    private final int PORT = 7070;
     public GameBoard game = new GameBoard();
     public Client(String getIP){
         this.getIP = getIP;
@@ -21,7 +28,7 @@ public class Client implements Runnable
             byte[] Buffer_out = Message.getBytes();
 
             InetAddress address = InetAddress.getByName(getIP); //Change to Input from string field
-            DatagramPacket packet_out = new DatagramPacket(Buffer_out, Buffer_out.length, address, 7070);
+            DatagramPacket packet_out = new DatagramPacket(Buffer_out, Buffer_out.length, address, PORT);
             // send data
             System.out.println("Sending to " + InetAddress.getLocalHost());
             socket.send(packet_out);
@@ -41,20 +48,30 @@ public class Client implements Runnable
             if(HelloApplication.getClientConnect()){
                 socket.receive(packet_in);
                 Response = new String(packet_in.getData()).trim();
+<<<<<<<<< Temporary merge branch 1
                 //NEW HERB With player number added
                 String[] playerData = Response.split(",");
                 int playerNum = Integer.parseInt((playerData[playerData.length - 1]));
                 String[] data = Arrays.copyOf(playerData, playerData.length - 1);
+=========
+                String[] data = Response.split(",");
+                String[] gameboard = Arrays.copyOfRange(data, 1, data.length);
+>>>>>>>>> Temporary merge branch 2
 //                for (int i = 0; i < data.length; i++){
 //                    System.out.println("data:" +data[i]);
 //                }
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
-                        game.clientStart(new Stage(), data);
+                        game.clientStart(new Stage(), data, address, PORT, playerNum);
+
                     }
                 });
-
+                while (true){
+                    socket.receive(packet_in);
+                    Response = new String(packet_in.getData()).trim();
+                    System.out.println(Response);
+                }
             }
             socket.close();
         } catch (IOException e) {
