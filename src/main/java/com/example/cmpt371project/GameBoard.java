@@ -17,6 +17,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import java.lang.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -311,15 +312,17 @@ public class GameBoard {
         String message = null;
         switch (command) {
             case "clicked":
-                message = command + "," + button.getId() + "," + playerId;
+                message = command + "," + System.currentTimeMillis()+ "," + playerId + "," + button.getId();
                 break;
             case "match":
             case "release":
-                message = command + "," + selected1.getId() + "," + selected2.getId() + "," + playerId;
+                message = command + "," + System.currentTimeMillis()+ "," + playerId + "," + selected1.getId() + "," + selected2.getId() + "," ;
                 break;
         }
         byte buffer[] = message.getBytes();
         DatagramPacket packet_out = new DatagramPacket(buffer, buffer.length, hostAddress, hostPort);
+        //System.out.println("GameAddress" + hostAddress);
+        //System.out.println("GamePort" + hostPort);
         try {
             socket.send(packet_out);
         } catch (IOException e) {

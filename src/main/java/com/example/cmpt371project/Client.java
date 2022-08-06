@@ -65,7 +65,9 @@ public class Client implements Runnable
                 while (true){
                     socket.receive(packet_in);
                     Response = new String(packet_in.getData()).trim();
-                    System.out.println(Response);
+                    String[] badData = Response.split(",");
+                    String[] output = Arrays.copyOf(badData, 4);
+                    System.out.println("from server: "+output[1]);
                 }
             }
             socket.close();
