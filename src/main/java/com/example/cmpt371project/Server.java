@@ -152,13 +152,12 @@ public class Server implements Runnable{
                 System.out.println(IncomingData);
                 switch (data[0]) {
                     case "clicked":
+                    case "release":
                         updateClient( socket,  packet_in, Buffer_in, data);
                         break;
                     case "match":
                         break;
-                    case "release":
-                        updateClient(socket, packet_in, Buffer_in, data);
-                        break;
+
                     case "Join":
                         addClient( socket,  packet_in, Buffer_in);
                         break;
