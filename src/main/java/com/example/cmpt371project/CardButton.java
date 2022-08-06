@@ -82,12 +82,13 @@ public class CardButton extends Button {
     public void setState(CardButtonState state) {
         if(state == CardButtonState.DEFAULT){
             this.setGraphic(cardBack);
+            this.setMouseTransparent(false);
             this.setDisable(false);
         }
 
         else if(state == CardButtonState.FLIPPED){
             this.setGraphic(cardFront);
-            this.setDisable(true);
+            this.setMouseTransparent(true);
         }
 
         else if(state == CardButtonState.NOT_IN_PLAY){

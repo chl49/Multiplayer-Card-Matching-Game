@@ -15,6 +15,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import java.lang.*;
@@ -83,6 +84,23 @@ public class GameBoard {
         // Container that holds the game board (grid pane)
         // Sets spacing between cards
         gameBoard = getGameBoardAsString(gridPane);
+    }
+
+    private void highlightPlayerScoreLabel(int playerId) {
+        switch (playerId) {
+            case 0:
+                playerOneScoreLabel.setBackground(new Background(new BackgroundFill(Color.BLUE, CornerRadii.EMPTY, Insets.EMPTY)));
+                break;
+            case 1:
+                playerTwoScoreLabel.setBackground(new Background(new BackgroundFill(Color.BLUE, CornerRadii.EMPTY, Insets.EMPTY)));
+                break;
+            case 2:
+                playerThreeScoreLabel.setBackground(new Background(new BackgroundFill(Color.BLUE, CornerRadii.EMPTY, Insets.EMPTY)));
+                break;
+            case 3:
+                playerFourScoreLabel.setBackground(new Background(new BackgroundFill(Color.BLUE, CornerRadii.EMPTY, Insets.EMPTY)));
+                break;
+        }
     }
 
     public void clientStart(Stage stage, String[] data, InetAddress address, int port, int id) {
@@ -174,6 +192,8 @@ public class GameBoard {
         playerFourScoreLabel.textProperty().bind(playerFourTextScore);
         playerFourTextScore.setValue(formatStringForScoreLabel("4", playerFourScore));
 
+        highlightPlayerScoreLabel(playerId);
+
         playerScoresVBox.getChildren().add(0, playerFourScoreLabel);
         playerScoresVBox.getChildren().add(0, playerThreeScoreLabel);
         playerScoresVBox.getChildren().add(0, playerTwoScoreLabel);
@@ -253,7 +273,7 @@ public class GameBoard {
                 selected1 = null;
                 selected2 = null;
 
-
+                //updateScore(playerId);
                 // Change depending on which player got the point
 //                playerOneScore++;
 //                playerOneTextScore.setValue(formatStringForScoreLabel("1", playerOneScore));
@@ -317,6 +337,7 @@ public class GameBoard {
                 message = command + "," + System.currentTimeMillis()+ "," + playerId + "," + button.getId();
                 break;
             case "match":
+                message = command + "," + System.currentTimeMillis()+ "," + playerId + "," + selected1.getId() + "," + selected2.getId();
                 break;
             case "release":
                 message = command + "," + System.currentTimeMillis()+ "," + playerId + "," + selected1.getId() + "," + selected2.getId();

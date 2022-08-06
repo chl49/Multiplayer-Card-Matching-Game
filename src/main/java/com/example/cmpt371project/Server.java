@@ -111,6 +111,13 @@ public class Server implements Runnable{
                 System.out.println(output);
                 socket.send(packet_new); // send data
 
+            } else if(data[0].equals("match")) {
+                buffer_new = message.getBytes();
+                DatagramPacket packet_new = new DatagramPacket(buffer_new, buffer_new.length, Add, P);
+                System.out.println("Sending new to " + Add + " on port: " + P);
+                String output = new String(packet_new.getData()).trim();
+                System.out.println(output);
+                socket.send(packet_new); // send data
             }
             else{
                 String[] newData = data;
@@ -153,9 +160,8 @@ public class Server implements Runnable{
                 switch (data[0]) {
                     case "clicked":
                     case "release":
-                        updateClient( socket,  packet_in, Buffer_in, data);
-                        break;
                     case "match":
+                        updateClient( socket,  packet_in, Buffer_in, data);
                         break;
 
                     case "Join":

@@ -86,12 +86,13 @@ public class Client implements Runnable
     public void receiveUpdateFromServer(String[] message){
         int buttonid1;
         int buttonid2;
-        int playerNum;
+        int playerNum = Integer.parseInt(message[2]) + 1;
         switch(message[0]){
             case "match":
                 buttonid1 = Integer.parseInt(message[3]);
                 buttonid2 = Integer.parseInt(message[4]);
                 game.removeCards(buttonid1, buttonid2);
+                game.updateScore(playerNum);
                 break;
             case "locked":
                 System.out.println("test "+message[3]);
@@ -102,8 +103,8 @@ public class Client implements Runnable
                 buttonid1 = Integer.parseInt(message[3]);
                 buttonid2 = Integer.parseInt(message[4]);
                 game.releaseCards(buttonid1, buttonid2);
+                break;
             case "score":
-                playerNum = Integer.parseInt(message[2]);
                 game.updateScore(playerNum);
                 break;
         }
