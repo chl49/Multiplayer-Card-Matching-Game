@@ -76,6 +76,7 @@ public class Client implements Runnable
                             receiveUpdateFromServer(output);
                         }
                     });
+                    //receiveUpdateFromServer(output);
                 }
             }
             socket.close();

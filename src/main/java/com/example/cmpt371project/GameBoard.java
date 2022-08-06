@@ -129,26 +129,26 @@ public class GameBoard {
             button.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent actionEvent) {
-                    sendMessage(button, "clicked");
-                    //TODO: may need a sleep function
-                    //Where Client sends information received from server
-                    switch(button.getState()) {
-                        case DEFAULT -> {
-                            //System.out.println("Flipping card");
-                            if(selected1 == null || selected2 == null) {
+                    if(selected1 == null || selected2 == null) {
+                        sendMessage(button, "clicked");
+                        //TODO: may need a sleep function
+                        //Where Client sends information received from server
+                        switch(button.getState()) {
+                            case DEFAULT -> {
+                                //System.out.println("Flipping card");
                                 button.setGraphic(button.getCardFront());
                                 button.setState(CardButton.CardButtonState.FLIPPED);
                             }
+                            case FLIPPED -> {
+                                System.out.println("Card is already flipped select a different card.");
+                            }
+                            case NOT_IN_PLAY -> {
+                                System.out.println("Card has already been used for a point.");
+                            }
                         }
-                        case FLIPPED -> {
-                            System.out.println("Card is already flipped select a different card.");
-                        }
-                        case NOT_IN_PLAY -> {
-                            System.out.println("Card has already been used for a point.");
-                        }
+                        handleCardMatching(button);
+                        //System.out.println("Card id:" + button.getId() + "\tValue:" + button.getValue());
                     }
-                    handleCardMatching(button);
-                    //System.out.println("Card id:" + button.getId() + "\tValue:" + button.getValue());
                 }
 
             });
