@@ -103,4 +103,8 @@ public class CardButton extends Button {
         this.state = state;
     }
 
+    @Override
+    public String toString() {
+        return value;
+    }
 }

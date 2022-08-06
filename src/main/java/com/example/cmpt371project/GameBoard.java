@@ -1,7 +1,6 @@
 package com.example.cmpt371project;
 
 import javafx.animation.PauseTransition;
-import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
@@ -82,9 +81,6 @@ public class GameBoard {
 
         // Container that holds the game board (grid pane)
         // Sets spacing between cards
-        for(CardButton cardButton: allButtons){
-            System.out.println("Array print: " + cardButton.getId());
-        }
         gameBoard = getGameBoardAsString(gridPane);
     }
 
@@ -143,7 +139,6 @@ public class GameBoard {
 
         // Container that holds the game board (grid pane)
 
-
         // Sets spacing between cards
         gridPane.setHgap(GRID_PANE_HORIZONTAL_SPACING);
         gridPane.setVgap(GRID_PANE_VERTICAL_SPACING);
@@ -158,7 +153,6 @@ public class GameBoard {
 
         root.getItems().add(0, playerScoresVBox);
         root.getItems().add(1, gridPane);
-
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
@@ -233,7 +227,7 @@ public class GameBoard {
             }
 
         });
-
+        allButtons.add(button);
         gridPane.add(button, column, row);
     }
     public void handleCardMatching(CardButton buttonClicked) {
@@ -337,33 +331,34 @@ public class GameBoard {
         return gameBoard;
     }
     // functions that handle updates from server
-    public void removeCards(String buttonid1, String buttonid2){
-
+    public void removeCards(int buttonid1, int buttonid2){
+        allButtons.get(buttonid1).setState(CardButton.CardButtonState.NOT_IN_PLAY);
+        allButtons.get(buttonid2).setState(CardButton.CardButtonState.NOT_IN_PLAY);
     }
-    public void lockCard(String buttonid1){
-
+    public void lockCard(int buttonid1){
+        allButtons.get(buttonid1).setState(CardButton.CardButtonState.IN_USE);
     }
-    public void releaseCards(String buttonid1, String buttonid2){
-
+    public void releaseCards(int buttonid1, int buttonid2){
+        allButtons.get(buttonid1).setState(CardButton.CardButtonState.DEFAULT);
+        allButtons.get(buttonid2).setState(CardButton.CardButtonState.DEFAULT);
     }
-    public void updateScore(String playerNumberString){
-        int playerNum = Integer.parseInt(playerNumberString);
+    public void updateScore(int playerNum){
         switch(playerNum){
             case 1:
                 playerOneScore++;
-                playerOneTextScore.setValue(formatStringForScoreLabel(playerNumberString, playerOneScore));
+                playerOneTextScore.setValue(formatStringForScoreLabel(String.valueOf(playerNum), playerOneScore));
                 break;
             case 2:
                 playerTwoScore++;
-                playerTwoTextScore.setValue(formatStringForScoreLabel(playerNumberString, playerTwoScore));
+                playerTwoTextScore.setValue(formatStringForScoreLabel(String.valueOf(playerNum), playerTwoScore));
                 break;
             case 3:
                 playerThreeScore++;
-                playerThreeTextScore.setValue(formatStringForScoreLabel(playerNumberString, playerThreeScore));
+                playerThreeTextScore.setValue(formatStringForScoreLabel(String.valueOf(playerNum), playerThreeScore));
                 break;
             case 4:
                 playerFourScore++;
-                playerFourTextScore.setValue(formatStringForScoreLabel(playerNumberString, playerFourScore));
+                playerFourTextScore.setValue(formatStringForScoreLabel(String.valueOf(playerNum), playerFourScore));
                 break;
         }
     }

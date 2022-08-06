@@ -74,26 +74,26 @@ public class Client implements Runnable
         }
     }
     public void receiveUpdateFromServer(String[] message){
-        String buttonid1;
-        String buttonid2;
-        String playerNumberString;
+        int buttonid1;
+        int buttonid2;
+        int playerNum;
         switch(message[0]){
             case "match":
-                buttonid1 = message[1];
-                buttonid2 = message[2];
+                buttonid1 = Integer.parseInt(message[1]);
+                buttonid2 = Integer.parseInt(message[2]);
                 game.removeCards(buttonid1, buttonid2);
                 break;
             case "lock":
-                buttonid1 = message[1];
+                buttonid1 = Integer.parseInt(message[1]);
                 game.lockCard(buttonid1);
                 break;
             case "release":
-                buttonid1 = message[1];
-                buttonid2 = message[2];
+                buttonid1 = Integer.parseInt(message[1]);
+                buttonid2 = Integer.parseInt(message[2]);
                 game.releaseCards(buttonid1, buttonid2);
             case "score":
-                playerNumberString = message[1];
-                game.updateScore(playerNumberString);
+                playerNum = Integer.parseInt(message[1]);
+                game.updateScore(playerNum);
                 break;
         }
     }
