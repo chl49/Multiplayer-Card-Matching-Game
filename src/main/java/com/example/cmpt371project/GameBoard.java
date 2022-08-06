@@ -253,9 +253,10 @@ public class GameBoard {
                 selected1 = null;
                 selected2 = null;
 
+
                 // Change depending on which player got the point
-                playerOneScore++;
-                playerOneTextScore.setValue(formatStringForScoreLabel("1", playerOneScore));
+//                playerOneScore++;
+//                playerOneTextScore.setValue(formatStringForScoreLabel("1", playerOneScore));
             });
             pause.play();
         }
@@ -316,6 +317,7 @@ public class GameBoard {
                 message = command + "," + System.currentTimeMillis()+ "," + playerId + "," + button.getId();
                 break;
             case "match":
+                break;
             case "release":
                 message = command + "," + System.currentTimeMillis()+ "," + playerId + "," + selected1.getId() + "," + selected2.getId() + "," ;
                 break;
