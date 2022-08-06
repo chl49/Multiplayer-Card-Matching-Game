@@ -15,7 +15,7 @@ public class Server implements Runnable{
     //player array variable to store players ports (only used for sending game board at the start)
     private boolean hasMessage;
     //
-    private final int MAX_PLAYERS = 1;
+    private final int MAX_PLAYERS = 2;
     private final DatagramPacket[] playerData = new DatagramPacket[MAX_PLAYERS];
     private int currentPlayers = 0;
     private boolean serverRunning = false;
@@ -92,18 +92,19 @@ public class Server implements Runnable{
         //NEW ###Herb: Acknowledge users connected, locking clients to port
 
         //String NewMessage = "DONE";
-        String NewMessage = String.join(",",data);
+        String message = String.join(",",data);
         //Herb: TODO:::: Queue processing NOT COMPLETED
         //updateMessageQueue(data);
-        System.out.println(NewMessage);
-        byte[] buffer_new = NewMessage.getBytes();
+        System.out.println(message);
         //Send Data to other players
         for (int i = 0; i < MAX_PLAYERS; i++){
+            byte[] buffer_new;
             InetAddress Add = playerData[i].getAddress();
             int P = playerData[i].getPort();
             //Herb: TODO:::: Player unique stuff
             //EX. data = [Clicked,0,1] == Action, Grid, Player
             if(Integer.parseInt(data[2])==i){
+                buffer_new = message.getBytes();
                 DatagramPacket packet_new = new DatagramPacket(buffer_new, buffer_new.length, Add, P);
                 System.out.println("Sending new to " + Add + " on port: " + P);
                 String output = new String(packet_new.getData()).trim();
@@ -112,6 +113,15 @@ public class Server implements Runnable{
 
             }
             else{
+                String[] newData = data;
+                newData[0] = "locked";
+                String otherMessage = String.join(",",newData);
+                buffer_new = otherMessage.getBytes();
+                DatagramPacket packet_new = new DatagramPacket(buffer_new, buffer_new.length, Add, P);
+                System.out.println("Sending new to " + Add + " on port: " + P);
+                String output = new String(packet_new.getData()).trim();
+                System.out.println(output);
+                socket.send(packet_new); // send data
             }
         }
     }

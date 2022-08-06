@@ -88,7 +88,7 @@ public class Client implements Runnable
                 buttonid2 = Integer.parseInt(message[4]);
                 game.removeCards(buttonid1, buttonid2);
                 break;
-            case "clicked":
+            case "locked":
                 System.out.println("test "+message[3]);
                 buttonid1 = Integer.parseInt(message[3]);
                 game.lockCard(buttonid1);
