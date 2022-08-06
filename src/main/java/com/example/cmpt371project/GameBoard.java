@@ -112,7 +112,8 @@ public class GameBoard {
                 @Override
                 public void handle(ActionEvent actionEvent) {
                     sendMessage(button, "clicked");
-                    //may need a sleep function
+                    //TODO: may need a sleep function
+                    //Where Client sends information received from server
                     switch(button.getState()) {
                         case DEFAULT -> {
                             //System.out.println("Flipping card");
@@ -321,8 +322,8 @@ public class GameBoard {
         }
         byte buffer[] = message.getBytes();
         DatagramPacket packet_out = new DatagramPacket(buffer, buffer.length, hostAddress, hostPort);
-        //System.out.println("GameAddress" + hostAddress);
         //System.out.println("GamePort" + hostPort);
+        //System.out.println("Button:" + button.getId());
         try {
             socket.send(packet_out);
         } catch (IOException e) {
@@ -339,6 +340,7 @@ public class GameBoard {
         allButtons.get(buttonid2).setState(CardButton.CardButtonState.NOT_IN_PLAY);
     }
     public void lockCard(int buttonid1){
+        System.out.println("lockCard "+buttonid1);
         allButtons.get(buttonid1).setState(CardButton.CardButtonState.IN_USE);
     }
     public void releaseCards(int buttonid1, int buttonid2){

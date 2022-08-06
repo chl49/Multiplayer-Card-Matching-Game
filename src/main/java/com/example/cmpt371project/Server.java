@@ -15,7 +15,7 @@ public class Server implements Runnable{
     //player array variable to store players ports (only used for sending game board at the start)
     private boolean hasMessage;
     //
-    private final int MAX_PLAYERS = 2;
+    private final int MAX_PLAYERS = 1;
     private final DatagramPacket[] playerData = new DatagramPacket[MAX_PLAYERS];
     private int currentPlayers = 0;
     private boolean serverRunning = false;
@@ -95,6 +95,7 @@ public class Server implements Runnable{
         String NewMessage = String.join(",",data);
         //Herb: TODO:::: Queue processing NOT COMPLETED
         //updateMessageQueue(data);
+        System.out.println(NewMessage);
         byte[] buffer_new = NewMessage.getBytes();
         //Send Data to other players
         for (int i = 0; i < MAX_PLAYERS; i++){
@@ -122,7 +123,7 @@ public class Server implements Runnable{
             InetAddress ip = InetAddress.getLocalHost();
             //InetAddress address = getByAddress("142.58.223.218", byte[] addr)
 
-            byte[] Buffer_in = new byte[256];
+            byte[] Buffer_in = new byte[60000];
             DatagramPacket packet_in = new DatagramPacket(Buffer_in, Buffer_in.length);
 
             // wait for incoming data
@@ -132,6 +133,8 @@ public class Server implements Runnable{
             HelloApplication.setHostPort(socket.getPort());
 
             while (serverRunning) {
+                Buffer_in = new byte[60000];
+                packet_in = new DatagramPacket(Buffer_in, Buffer_in.length);
                 socket.receive(packet_in);
 
                 String IncomingData = new String(packet_in.getData()).trim();

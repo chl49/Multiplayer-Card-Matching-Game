@@ -63,11 +63,14 @@ public class Client implements Runnable
                     }
                 });
                 while (true){
+                    Buffer_in = new byte[60000];
+                    packet_in = new DatagramPacket(Buffer_in, Buffer_in.length);
                     socket.receive(packet_in);
                     Response = new String(packet_in.getData()).trim();
-                    String[] badData = Response.split(",");
-                    String[] output = Arrays.copyOf(badData, 4);
-                    System.out.println("from server: "+output[1]);
+                    String[] output = Response.split(",");
+                    //String[] output = Arrays.copyOf(badData, 4);
+                    System.out.println("from server: "+Response);
+                    receiveUpdateFromServer(output);
                 }
             }
             socket.close();
@@ -81,20 +84,21 @@ public class Client implements Runnable
         int playerNum;
         switch(message[0]){
             case "match":
-                buttonid1 = Integer.parseInt(message[1]);
-                buttonid2 = Integer.parseInt(message[2]);
+                buttonid1 = Integer.parseInt(message[3]);
+                buttonid2 = Integer.parseInt(message[4]);
                 game.removeCards(buttonid1, buttonid2);
                 break;
-            case "lock":
-                buttonid1 = Integer.parseInt(message[1]);
+            case "clicked":
+                System.out.println("test "+message[3]);
+                buttonid1 = Integer.parseInt(message[3]);
                 game.lockCard(buttonid1);
                 break;
             case "release":
-                buttonid1 = Integer.parseInt(message[1]);
-                buttonid2 = Integer.parseInt(message[2]);
+                buttonid1 = Integer.parseInt(message[3]);
+                buttonid2 = Integer.parseInt(message[4]);
                 game.releaseCards(buttonid1, buttonid2);
             case "score":
-                playerNum = Integer.parseInt(message[1]);
+                playerNum = Integer.parseInt(message[2]);
                 game.updateScore(playerNum);
                 break;
         }

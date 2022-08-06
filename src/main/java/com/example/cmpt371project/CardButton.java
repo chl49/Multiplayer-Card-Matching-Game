@@ -96,7 +96,7 @@ public class CardButton extends Button {
         }
 
         else if(state == CardButtonState.IN_USE) {
-            this.setGraphic(cardBack);
+            this.setGraphic(cardFront);
             this.setDisable(true);
         }
 
