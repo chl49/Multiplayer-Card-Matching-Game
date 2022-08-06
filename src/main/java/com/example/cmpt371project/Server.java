@@ -103,7 +103,7 @@ public class Server implements Runnable{
             int P = playerData[i].getPort();
             //Herb: TODO:::: Player unique stuff
             //EX. data = [Clicked,0,1] == Action, Grid, Player
-            if(Integer.parseInt(data[2])==i){
+            if(Integer.parseInt(data[2])==i || data[0].equals("release")){
                 buffer_new = message.getBytes();
                 DatagramPacket packet_new = new DatagramPacket(buffer_new, buffer_new.length, Add, P);
                 System.out.println("Sending new to " + Add + " on port: " + P);
@@ -149,15 +149,15 @@ public class Server implements Runnable{
 
                 String IncomingData = new String(packet_in.getData()).trim();
                 String[] data = IncomingData.split(",");
-                //System.out.println(IncomingData);
+                System.out.println(IncomingData);
                 switch (data[0]) {
                     case "clicked":
+                    case "release":
                         updateClient( socket,  packet_in, Buffer_in, data);
                         break;
                     case "match":
                         break;
-                    case "release":
-                        break;
+
                     case "Join":
                         addClient( socket,  packet_in, Buffer_in);
                         break;

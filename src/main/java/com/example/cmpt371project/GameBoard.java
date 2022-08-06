@@ -319,7 +319,7 @@ public class GameBoard {
             case "match":
                 break;
             case "release":
-                message = command + "," + System.currentTimeMillis()+ "," + playerId + "," + selected1.getId() + "," + selected2.getId() + "," ;
+                message = command + "," + System.currentTimeMillis()+ "," + playerId + "," + selected1.getId() + "," + selected2.getId();
                 break;
         }
         byte buffer[] = message.getBytes();
