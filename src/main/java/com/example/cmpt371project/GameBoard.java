@@ -11,6 +11,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.image.ImageView;
@@ -19,8 +20,8 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.File;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.io.IOException;
+import java.net.*;
 import java.util.*;
 
 import static java.util.Arrays.asList;
@@ -35,7 +36,7 @@ public class GameBoard {
     private static final int GRID_PANE_HORIZONTAL_SPACING = 0;
     private static final int GRID_PANE_BORDER_SPACING = 15;
     private static final int MAX_COLUMNS = 8;
-    private static final String DEFAULT_SCORE_STRING = "Player %s: \t%o";
+    private static final String DEFAULT_SCORE_STRING = "Player %s: \t%o          ";
     private StringProperty playerOneTextScore = new SimpleStringProperty();
     private Label playerOneScoreLabel = new Label();
     private int playerOneScore = 0;
@@ -56,6 +57,11 @@ public class GameBoard {
     CardButton selected1;
     CardButton selected2;
 
+
+    //Networking
+    private int playerId;
+    private InetAddress hostAddress;
+    private int hostPort;
     public void start() {
         // Gets all files from resources -> img -> fronts
         String[] imageNames = getListOfFileNames(CARD_FRONT_PATH);
@@ -82,7 +88,11 @@ public class GameBoard {
         gameBoard = getGameBoardAsString(gridPane);
     }
 
-    public void clientStart(Stage stage, String[] data) {
+    public void clientStart(Stage stage, String[] data, InetAddress address, int port, int id) {
+        this.hostAddress = address;
+        this.hostPort = port;
+        this.playerId = id;
+
         stage.setTitle("Match!");
 
         // Gets all files from resources -> img -> fronts
@@ -100,10 +110,12 @@ public class GameBoard {
             }
             String card = data[x] + ".png";
             CardButton button = new CardButton(new ImageView(getClass().getResource("/img/fronts/" + card).toExternalForm()), data[x]);
-            button.setId("" + buttonId);
+            button.setId(Integer.toString(buttonId));
             button.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent actionEvent) {
+                    sendMessage(button, "clicked");
+                    //may need a sleep function
                     switch(button.getState()) {
                         case DEFAULT -> {
                             //System.out.println("Flipping card");
@@ -225,7 +237,6 @@ public class GameBoard {
         gridPane.add(button, column, row);
     }
     public void handleCardMatching(CardButton buttonClicked) {
-        System.out.println("Card id:" + buttonClicked.getId() + " Val" + buttonClicked.getValue());
         if(selected1 == null && selected2 == null){
             selected1 = buttonClicked;
         }
@@ -242,6 +253,7 @@ public class GameBoard {
             pause.setOnFinished(e ->{
                 selected1.setState(CardButton.CardButtonState.NOT_IN_PLAY);
                 selected2.setState(CardButton.CardButtonState.NOT_IN_PLAY);
+                sendMessage(selected1, "match");
                 selected1 = null;
                 selected2 = null;
 
@@ -257,6 +269,7 @@ public class GameBoard {
             pause.setOnFinished(e ->{
                 selected1.setState(CardButton.CardButtonState.DEFAULT);
                 selected2.setState(CardButton.CardButtonState.DEFAULT);
+                sendMessage(selected1, "release");
                 selected1 = null;
                 selected2 = null;
             });
@@ -294,7 +307,32 @@ public class GameBoard {
 
         return sb.toString();
     }
-
+    private void sendMessage(Button button, String command) {
+        DatagramSocket socket;
+        try {
+            socket = new DatagramSocket();
+        } catch (SocketException e) {
+            throw new RuntimeException(e);
+        }
+        String message = null;
+        switch (command) {
+            case "clicked":
+                message = command + "," + button.getId() + "," + playerId;
+                break;
+            case "match":
+            case "release":
+                message = command + "," + selected1.getId() + "," + selected2.getId() + "," + playerId;
+                break;
+        }
+        byte buffer[] = message.getBytes();
+        DatagramPacket packet_out = new DatagramPacket(buffer, buffer.length, hostAddress, hostPort);
+        try {
+            socket.send(packet_out);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        socket.close();
+    }
     public String getGameBoard() {
         return gameBoard;
     }
