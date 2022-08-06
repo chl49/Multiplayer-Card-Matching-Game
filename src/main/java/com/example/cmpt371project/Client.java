@@ -70,7 +70,13 @@ public class Client implements Runnable
                     String[] output = Response.split(",");
                     //String[] output = Arrays.copyOf(badData, 4);
                     System.out.println("from server: "+Response);
-                    receiveUpdateFromServer(output);
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            receiveUpdateFromServer(output);
+                        }
+                    });
+                    //receiveUpdateFromServer(output);
                 }
             }
             socket.close();
