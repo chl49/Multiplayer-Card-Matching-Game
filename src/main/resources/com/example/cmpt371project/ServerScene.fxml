@@ -12,15 +12,5 @@
                 <Font size="50.0" />
             </font>
         </Label>
-        <Button layoutX="197.0" layoutY="180.0" mnemonicParsing="false" onAction="#switchToHomeScene" text="Back to Home Screen">
-            <font>
-                <Font size="20.0" />
-            </font>
-        </Button>
-      <Button alignment="CENTER" layoutX="197.0" layoutY="226.0" mnemonicParsing="false" onAction="#startGame" prefHeight="40.0" prefWidth="207.0" text="Start Game">
-         <font>
-            <Font size="20.0" />
-         </font>
-      </Button>
     </children>
 </AnchorPane>

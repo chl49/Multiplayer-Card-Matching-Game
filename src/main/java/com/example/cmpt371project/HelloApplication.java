@@ -11,14 +11,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.scene.Parent;
-import org.w3c.dom.Text;
-
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.URL;
-import com.example.cmpt371project.*;
 public class HelloApplication extends Application {
 
     private Stage stage;
@@ -57,14 +52,6 @@ public class HelloApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        /*
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("HomeScene.fxml"));
-        Scene scene = new Scene(fxmlLoader.load());
-        stage.setTitle("CMPT 371 Group 4 Matching Game");
-        stage.setScene(scene);
-        stage.show();
-        */
-        //FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("HomeScene.fxml"));
         root = FXMLLoader.load(getClass().getResource("HomeScene.fxml"));
         scene = new Scene(root);
         stage.setTitle("CMPT 371 Group 4 Matching Game");
@@ -85,12 +72,7 @@ public class HelloApplication extends Application {
         URL url = new URL(urlString);
         //String ip;
         String ip = InetAddress.getLocalHost().getHostAddress();
-        /*
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()))) {
-            ip = br.readLine();
-        }
 
-         */
         System.out.println(ip);
         Parent newRoot = FXMLLoader.load(getClass().getResource("ServerScene.fxml"));
         hostIP = (Label) newRoot.lookup("#hostIP");
@@ -128,26 +110,19 @@ public class HelloApplication extends Application {
         stage.show();
 
         //Hit Enter upon typing ip address
-        EventHandler<ActionEvent> onClick = new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent e)
-            {
-                hostIP = (Label) newRoot.lookup("#hostIP");
-                hostIP.setText(getIp.getText());
-                Thread cl;
-                if(!clientConnected){
-                    cl = new Thread(new Client(getIp.getText()), "Guest Client Thread");
-                    cl.start();
-                }
-
+        EventHandler<ActionEvent> onClick = e -> {
+            hostIP = (Label) newRoot.lookup("#hostIP");
+            hostIP.setText(getIp.getText());
+            Thread cl;
+            if(!clientConnected){
+                cl = new Thread(new Client(getIp.getText()), "Guest Client Thread");
+                cl.start();
             }
+
         };
         getIp.setOnAction(onClick);
 
     }
-
-    public void startGame(ActionEvent event){
-    }
-
     public static void main(String[] args) {
         launch();
     }

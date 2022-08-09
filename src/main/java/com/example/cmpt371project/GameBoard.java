@@ -52,7 +52,7 @@ public class GameBoard {
     private Label playerFourScoreLabel = new Label();
     private int playerFourScore = 0;
 
-    private int currentPairs =19;
+    private int currentPairs = 0;
     private final int TOTAL_PAIRS = 20;
     private final String WIN_IMAGE = "/img/backs/win_shirmohammadi.jpg";
     private final String TIE_IMAGE = "/img/backs/tie_shirmohammadi.jpg";
@@ -143,8 +143,6 @@ public class GameBoard {
                             case DEFAULT -> {
                                 System.out.println("Flipping card");
                                 sendMessage(button, "clicked");
-                                //button.setGraphic(button.getCardFront());
-                                //button.setState(CardButton.CardButtonState.FLIPPED);
                             }
                             case FLIPPED -> {
                                 System.out.println("Card is already flipped select a different card.");
@@ -154,7 +152,6 @@ public class GameBoard {
                             }
                         }
                         handleCardMatching(button);
-                        //System.out.println("Card id:" + button.getId() + "\tValue:" + button.getValue());
                     }
                 }
 
@@ -253,9 +250,7 @@ public class GameBoard {
                     }
                 }
                 handleCardMatching(button);
-                //System.out.println("Card id:" + button.getId() + "\tValue:" + button.getValue());
             }
-
         });
         allButtons.add(button);
         gridPane.add(button, column, row);
@@ -268,7 +263,6 @@ public class GameBoard {
             selected2 = buttonClicked;
             checkForMatch();
         }
-        //System.out.println("Score: " + score);
     }
     private void checkForMatch() {
         if(selected1.getValue().equals(selected2.getValue()) && selected1 != selected2){
@@ -280,11 +274,6 @@ public class GameBoard {
                 sendMessage(selected1, "match");
                 selected1 = null;
                 selected2 = null;
-
-                //updateScore(playerId);
-                // Change depending on which player got the point
-//                playerOneScore++;
-//                playerOneTextScore.setValue(formatStringForScoreLabel("1", playerOneScore));
             });
             pause.play();
         }
@@ -332,6 +321,7 @@ public class GameBoard {
 
         return sb.toString();
     }
+    //Sends an update to the server to be processed
     private void sendMessage(Button button, String command) {
         DatagramSocket socket;
         try {
@@ -345,16 +335,14 @@ public class GameBoard {
                 message = command + "," + System.currentTimeMillis()+ "," + playerId + "," + button.getId();
                 break;
             case "match":
-                message = command + "," + System.currentTimeMillis()+ "," + playerId + "," + selected1.getId() + "," + selected2.getId();
-                break;
             case "release":
                 message = command + "," + System.currentTimeMillis()+ "," + playerId + "," + selected1.getId() + "," + selected2.getId();
                 break;
         }
+        //Opens temporary socket to send to server
+        //Message structure = command,from which player, which button(s)
         byte buffer[] = message.getBytes();
         DatagramPacket packet_out = new DatagramPacket(buffer, buffer.length, hostAddress, hostPort);
-        //System.out.println("GamePort" + hostPort);
-        //System.out.println("Button:" + button.getId());
         try {
             socket.send(packet_out);
         } catch (IOException e) {
@@ -371,8 +359,6 @@ public class GameBoard {
         allButtons.get(buttonid2).setState(CardButton.CardButtonState.NOT_IN_PLAY);
     }
     public void clickCard(int buttonid1){
-        //button.setGraphic(button.getCardFront());
-        //button.setState(CardButton.CardButtonState.FLIPPED);
         System.out.println("clickCard "+buttonid1);
         allButtons.get(buttonid1).setState(CardButton.CardButtonState.FLIPPED);
     }
@@ -405,15 +391,6 @@ public class GameBoard {
                 break;
         }
         //Checks if boards empty
-        currentPairs++;
-        if (currentPairs >= TOTAL_PAIRS) {
-            //if player id == highest score && not tied
-            displayEnd(TIE_IMAGE);
-            //if tie
-            //displayEnd(TIE_IMAGE);
-            //if lose
-            //displayEnd(LOSE_IMAGE);
-        }
     }
     private void displayEnd(String filePath){
         ImageView imageView = new ImageView(new Image(String.valueOf(getClass().getResource(filePath))));
