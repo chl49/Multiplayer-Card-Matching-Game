@@ -13,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -51,6 +52,11 @@ public class GameBoard {
     private Label playerFourScoreLabel = new Label();
     private int playerFourScore = 0;
 
+    private int currentPairs =19;
+    private final int TOTAL_PAIRS = 20;
+    private final String WIN_IMAGE = "/img/backs/win_shirmohammadi.jpg";
+    private final String TIE_IMAGE = "/img/backs/tie_shirmohammadi.jpg";
+    private final String LOSE_IMAGE = "/img/backs/lose_shirmohammadi.jpg";
     private String gameBoard;
     GridPane gridPane = new GridPane();
     ArrayList<CardButton> allButtons = new ArrayList<>();
@@ -175,6 +181,7 @@ public class GameBoard {
         root.getItems().add(1, gridPane);
         Scene scene = new Scene(root);
         stage.setScene(scene);
+
         stage.show();
         getGameBoardAsString(gridPane);
     }
@@ -389,6 +396,26 @@ public class GameBoard {
                 playerFourTextScore.setValue(formatStringForScoreLabel(String.valueOf(playerNum), playerFourScore));
                 break;
         }
+        //Checks if boards empty
+        currentPairs++;
+        if (currentPairs >= TOTAL_PAIRS) {
+            //if player id == highest score && not tied
+            displayEnd(TIE_IMAGE);
+            //if tie
+            //displayEnd(TIE_IMAGE);
+            //if lose
+            //displayEnd(LOSE_IMAGE);
+        }
+    }
+    private void displayEnd(String filePath){
+        ImageView imageView = new ImageView(new Image(String.valueOf(getClass().getResource(filePath))));
+
+        VBox vBox = new VBox();
+        vBox.getChildren().add(imageView);
+
+        Stage stage = new Stage();
+        stage.setScene(new Scene(vBox));
+        stage.show();
     }
 
 }
