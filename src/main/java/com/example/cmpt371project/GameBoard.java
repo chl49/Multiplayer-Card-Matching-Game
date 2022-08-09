@@ -53,7 +53,7 @@ public class GameBoard {
     private int playerFourScore = 0;
 
     private int currentPairs = 0;
-    private final int TOTAL_PAIRS = 20;
+    private final int TOTAL_NUMBER_OF_PAIRS = TOTAL_NUMBER_OF_CARDS / 2;
     private final String WIN_IMAGE = "/img/backs/win_shirmohammadi.jpg";
     private final String TIE_IMAGE = "/img/backs/tie_shirmohammadi.jpg";
     private final String LOSE_IMAGE = "/img/backs/lose_shirmohammadi.jpg";
@@ -76,7 +76,7 @@ public class GameBoard {
 
         int buttonId = 0;
         LinkedHashMap<String, Integer> cardCount = new LinkedHashMap<String, Integer>();
-        int TOTAL_NUMBER_OF_PAIRS = TOTAL_NUMBER_OF_CARDS / 2;
+
         for(int i = 0; i < TOTAL_NUMBER_OF_PAIRS; i++){
             cardCount.put(imageNames[i], 0);
         }
@@ -205,8 +205,6 @@ public class GameBoard {
         playerScoresVBox.getChildren().add(0, playerOneScoreLabel);
         return playerScoresVBox;
     }
-
-
 
     private String formatStringForScoreLabel(String playerNumber, int score) {
         return String.format(DEFAULT_SCORE_STRING, playerNumber, score);
@@ -353,6 +351,16 @@ public class GameBoard {
     public String getGameBoard() {
         return gameBoard;
     }
+    private void displayEnd(String filePath){
+        ImageView imageView = new ImageView(new Image(String.valueOf(getClass().getResource(filePath))));
+
+        VBox vBox = new VBox();
+        vBox.getChildren().add(imageView);
+
+        Stage stage = new Stage();
+        stage.setScene(new Scene(vBox));
+        stage.show();
+    }
     // functions that handle updates from server
     public void removeCards(int buttonid1, int buttonid2){
         allButtons.get(buttonid1).setState(CardButton.CardButtonState.NOT_IN_PLAY);
@@ -390,17 +398,5 @@ public class GameBoard {
                 playerFourTextScore.setValue(formatStringForScoreLabel(String.valueOf(playerNum), playerFourScore));
                 break;
         }
-        //Checks if boards empty
     }
-    private void displayEnd(String filePath){
-        ImageView imageView = new ImageView(new Image(String.valueOf(getClass().getResource(filePath))));
-
-        VBox vBox = new VBox();
-        vBox.getChildren().add(imageView);
-
-        Stage stage = new Stage();
-        stage.setScene(new Scene(vBox));
-        stage.show();
-    }
-
 }

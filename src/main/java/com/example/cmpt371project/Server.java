@@ -5,7 +5,6 @@ import java.net.*;
 
 public class Server implements Runnable{
     //player array variable to store players ports (only used for sending game board at the start)
-    //
     private final int MAX_PLAYERS = 4;
     private final DatagramPacket[] playerData = new DatagramPacket[MAX_PLAYERS];
     private int currentPlayers = 0;
@@ -47,12 +46,10 @@ public class Server implements Runnable{
         }
     }
     public void updateClient(DatagramSocket socket, DatagramPacket packet_in, byte[] Buffer_in, String[] data) throws IOException {
-        //Herb: TODO:::: Server Multicast
         //NEW ###Herb: Acknowledge users connected, locking clients to port
 
         //String NewMessage = "DONE";
         String message = String.join(",",data);
-        //Herb: TODO:::: Queue processing NOT COMPLETED
         //updateMessageQueue(data);
         System.out.println(message);
         //Send Data to other players
@@ -60,7 +57,6 @@ public class Server implements Runnable{
             byte[] buffer_new;
             InetAddress Add = playerData[i].getAddress();
             int P = playerData[i].getPort();
-            //Herb: TODO:::: Player unique stuff
             //EX. data = [Clicked,0,1] == Action, Grid, Player
             if(Integer.parseInt(data[2])==i || data[0].equals("release")){
                 buffer_new = message.getBytes();
