@@ -4,11 +4,6 @@ import javafx.application.Platform;
 import javafx.stage.Stage;
 
 import java.io.*; import java.net.*;
-
-import java.io.*;
-import java.lang.reflect.Array;
-import java.net.*;
-
 import java.util.Arrays;
 
 public class Client implements Runnable
@@ -52,9 +47,8 @@ public class Client implements Runnable
                 String[] data = Arrays.copyOf(playerData, playerData.length - 1);
 
                 data = Response.split(",");
-//                    System.out.println("data:" +data[i]);
-//                }
                 String[] finalData = data;
+                //Starts game
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
@@ -62,21 +56,21 @@ public class Client implements Runnable
 
                     }
                 });
+                //Waits for server updates
                 while (true){
                     Buffer_in = new byte[60000];
                     packet_in = new DatagramPacket(Buffer_in, Buffer_in.length);
                     socket.receive(packet_in);
                     Response = new String(packet_in.getData()).trim();
                     String[] output = Response.split(",");
-                    //String[] output = Arrays.copyOf(badData, 4);
                     System.out.println("from server: "+Response);
+                    //Updates game based on server input
                     Platform.runLater(new Runnable() {
                         @Override
                         public void run() {
                             receiveUpdateFromServer(output);
                         }
                     });
-                    //receiveUpdateFromServer(output);
                 }
             }
             socket.close();
@@ -88,6 +82,7 @@ public class Client implements Runnable
         int buttonid1;
         int buttonid2;
         int playerNum = Integer.parseInt(message[2]) + 1;
+        //Does specific thing depending on message received
         switch(message[0]){
             case "match":
                 buttonid1 = Integer.parseInt(message[3]);
@@ -96,12 +91,10 @@ public class Client implements Runnable
                 game.updateScore(playerNum);
                 break;
             case "clicked":
-                System.out.println("test "+message[3]);
                 buttonid1 = Integer.parseInt(message[3]);
                 game.clickCard(buttonid1);
                 break;
             case "locked":
-                System.out.println("test "+message[3]);
                 buttonid1 = Integer.parseInt(message[3]);
                 game.lockCard(buttonid1);
                 break;
