@@ -136,14 +136,15 @@ public class GameBoard {
                 @Override
                 public void handle(ActionEvent actionEvent) {
                     if(selected1 == null || selected2 == null) {
-                        sendMessage(button, "clicked");
+                        //sendMessage(button, "clicked");
                         //TODO: may need a sleep function
                         //Where Client sends information received from server
                         switch(button.getState()) {
                             case DEFAULT -> {
-                                //System.out.println("Flipping card");
-                                button.setGraphic(button.getCardFront());
-                                button.setState(CardButton.CardButtonState.FLIPPED);
+                                System.out.println("Flipping card");
+                                sendMessage(button, "clicked");
+                                //button.setGraphic(button.getCardFront());
+                                //button.setState(CardButton.CardButtonState.FLIPPED);
                             }
                             case FLIPPED -> {
                                 System.out.println("Card is already flipped select a different card.");
@@ -369,6 +370,13 @@ public class GameBoard {
         allButtons.get(buttonid1).setState(CardButton.CardButtonState.NOT_IN_PLAY);
         allButtons.get(buttonid2).setState(CardButton.CardButtonState.NOT_IN_PLAY);
     }
+    public void clickCard(int buttonid1){
+        //button.setGraphic(button.getCardFront());
+        //button.setState(CardButton.CardButtonState.FLIPPED);
+        System.out.println("clickCard "+buttonid1);
+        allButtons.get(buttonid1).setState(CardButton.CardButtonState.FLIPPED);
+    }
+
     public void lockCard(int buttonid1){
         System.out.println("lockCard "+buttonid1);
         allButtons.get(buttonid1).setState(CardButton.CardButtonState.IN_USE);

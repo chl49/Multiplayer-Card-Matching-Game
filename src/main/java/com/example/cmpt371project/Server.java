@@ -15,7 +15,7 @@ public class Server implements Runnable{
     //player array variable to store players ports (only used for sending game board at the start)
     private boolean hasMessage;
     //
-    private final int MAX_PLAYERS = 1;
+    private final int MAX_PLAYERS = 2;
     private final DatagramPacket[] playerData = new DatagramPacket[MAX_PLAYERS];
     private int currentPlayers = 0;
     private boolean serverRunning = false;

@@ -95,6 +95,11 @@ public class Client implements Runnable
                 game.removeCards(buttonid1, buttonid2);
                 game.updateScore(playerNum);
                 break;
+            case "clicked":
+                System.out.println("test "+message[3]);
+                buttonid1 = Integer.parseInt(message[3]);
+                game.clickCard(buttonid1);
+                break;
             case "locked":
                 System.out.println("test "+message[3]);
                 buttonid1 = Integer.parseInt(message[3]);
