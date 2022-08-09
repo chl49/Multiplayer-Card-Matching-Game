@@ -10,6 +10,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.scene.Parent;
 import java.io.IOException;
@@ -55,6 +56,8 @@ public class Application extends javafx.application.Application {
     public void start(Stage stage) throws IOException {
         root = FXMLLoader.load(getClass().getResource("HomeScene.fxml"));
         scene = new Scene(root);
+        stage.getIcons().add(new Image(Application.class.getResourceAsStream("/img/backs/card_back.png")));
+        //stage.getIcons().add(new Image(Application.class.getResourceAsStream("/img/backs/eecs_shervin_shirmohammadi.jpg")));
         stage.setTitle("CMPT 371 Group 4 Matching Game");
         stage.setScene(scene);
         stage.show();
