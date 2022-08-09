@@ -79,18 +79,23 @@ public class CardButton extends Button {
         return state;
     }
 
-    //Object Locking Scheme with the objects shared between the 4 players being the cards
-    //If CardButtonState is DEFAULT, the object is shared
-    //If a DEFAULT CardButton is clicked by a client:
-    // - the Client who clicked will have the card become FLIPPED
-    // - other Clients will have the clicked card become IN_USE
-    // - the clicked card becomes locked and unusable.
-    // - IF a DEFAULT card clicked matches a previous card FLIPPED:
-    //    - The current card and previous card becomes NOT_IN_PLAY
-    //    - Points will be awarded to the matched client's score
-    // - IF a DEFAULT card clicked does not match a previous card FLIPPED:
-    //    - The current card and previous card revert to DEFAULT
-    //    - all clients will have the two objects unlocked as shared objects
+
+
+    /**
+     * Object Locking Scheme with the objects shared between the 4 players being the cards
+     *     If CardButtonState is DEFAULT, the object is shared
+     *     If a DEFAULT CardButton is clicked by a client:
+     *      - the Client who clicked will have the card become FLIPPED
+     *      - other Clients will have the clicked card become IN_USE
+     *      - the clicked card becomes locked and unusable.
+     *      - IF a DEFAULT card clicked matches a previous card FLIPPED:
+     *         - The current card and previous card becomes NOT_IN_PLAY
+     *         - Points will be awarded to the matched client's score
+     *      - IF a DEFAULT card clicked does not match a previous card FLIPPED:
+     *         - The current card and previous card revert to DEFAULT
+     *         - all clients will have the two objects unlocked as shared objects
+     * @param state new state of the button
+     */
     public void setState(CardButtonState state) {
         if(state == CardButtonState.DEFAULT){
             this.setGraphic(cardBack);
