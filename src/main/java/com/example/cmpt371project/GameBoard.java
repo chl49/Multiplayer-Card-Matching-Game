@@ -408,7 +408,7 @@ public class GameBoard {
         System.out.println(winningScore);
 
         switch (playerNumber) {
-            case 1:
+            case 0:
                 if(tie && playerOneScore == winningScore) {
                     displayEnd(TIE_IMAGE);
                 } else if(!tie && playerOneScore == winningScore) {
@@ -418,7 +418,7 @@ public class GameBoard {
                 }
                 break;
 
-            case 2:
+            case 1:
                 if(tie && playerTwoScore == winningScore) {
                     displayEnd(TIE_IMAGE);
                 } else if(!tie && playerTwoScore == winningScore) {
@@ -428,7 +428,7 @@ public class GameBoard {
                 }
                 break;
 
-            case 3:
+            case 2:
                 if(tie && playerThreeScore == winningScore) {
                     displayEnd(TIE_IMAGE);
                 } else if(!tie && playerThreeScore == winningScore) {
@@ -438,7 +438,7 @@ public class GameBoard {
                 }
                 break;
 
-            case 4:
+            case 3:
                 if(tie && playerFourScore == winningScore) {
                     displayEnd(TIE_IMAGE);
                 } else if(!tie && playerFourScore == winningScore) {
