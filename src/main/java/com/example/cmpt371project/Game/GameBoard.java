@@ -1,4 +1,4 @@
-package com.example.cmpt371project;
+package com.example.cmpt371project.Game;
 
 import javafx.animation.PauseTransition;
 import javafx.beans.property.SimpleStringProperty;
@@ -138,7 +138,6 @@ public class GameBoard {
                 public void handle(ActionEvent actionEvent) {
                     if(selected1 == null || selected2 == null) {
                         //sendMessage(button, "clicked");
-                        //TODO: may need a sleep function
                         //Where Client sends information received from server
                         switch(button.getState()) {
                             case DEFAULT -> {

@@ -1,4 +1,7 @@
-package com.example.cmpt371project;
+package com.example.cmpt371project.Networking;
+
+import com.example.cmpt371project.Game.GameBoard;
+import com.example.cmpt371project.Application;
 
 import java.io.*;
 import java.net.*;
@@ -99,8 +102,8 @@ public class Server implements Runnable{
             // wait for incoming data
             serverRunning = true;
             System.out.println("Setting up Server at Local address "+ ip.getHostAddress());
-            HelloApplication.setHostAddress(ip.getHostAddress());
-            HelloApplication.setHostPort(socket.getPort());
+            Application.setHostAddress(ip.getHostAddress());
+            Application.setHostPort(socket.getPort());
 
             while (serverRunning) {
                 Buffer_in = new byte[60000];

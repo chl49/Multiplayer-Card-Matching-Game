@@ -1,6 +1,7 @@
 package com.example.cmpt371project;
 
-import javafx.application.Application;
+import com.example.cmpt371project.Networking.Client;
+import com.example.cmpt371project.Networking.Server;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -14,7 +15,7 @@ import javafx.scene.Parent;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URL;
-public class HelloApplication extends Application {
+public class Application extends javafx.application.Application {
 
     private Stage stage;
     private Scene scene;

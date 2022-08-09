@@ -1,5 +1,7 @@
-package com.example.cmpt371project;
+package com.example.cmpt371project.Networking;
 
+import com.example.cmpt371project.Game.GameBoard;
+import com.example.cmpt371project.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 
@@ -36,9 +38,9 @@ public class Client implements Runnable
             String Response = new String(packet_in.getData()).trim();
             if(Response.equals("Connected")){
                 System.out.println("Client is connected");
-                HelloApplication.setClientConnect(true);
+                Application.setClientConnect(true);
             }
-            if(HelloApplication.getClientConnect()){
+            if(Application.getClientConnect()){
                 socket.receive(packet_in);
                 Response = new String(packet_in.getData()).trim();
                 //NEW HERB With player number added

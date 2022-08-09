@@ -13,4 +13,8 @@ module com.example.cmpt371project {
 
     opens com.example.cmpt371project to javafx.fxml;
     exports com.example.cmpt371project;
+    exports com.example.cmpt371project.Networking;
+    opens com.example.cmpt371project.Networking to javafx.fxml;
+    exports com.example.cmpt371project.Game;
+    opens com.example.cmpt371project.Game to javafx.fxml;
 }

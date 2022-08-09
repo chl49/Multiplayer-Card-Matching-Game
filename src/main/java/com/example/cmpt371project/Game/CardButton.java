@@ -1,4 +1,4 @@
-package com.example.cmpt371project;
+package com.example.cmpt371project.Game;
 
 /**
  * @author Steve
