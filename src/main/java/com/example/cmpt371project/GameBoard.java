@@ -52,7 +52,7 @@ public class GameBoard {
     private Label playerFourScoreLabel = new Label();
     private int playerFourScore = 0;
 
-    private int currentPairs =19;
+    private int currentPairs = 0;
     private final int TOTAL_PAIRS = 20;
     private final String WIN_IMAGE = "/img/backs/win_shirmohammadi.jpg";
     private final String TIE_IMAGE = "/img/backs/tie_shirmohammadi.jpg";
@@ -386,6 +386,8 @@ public class GameBoard {
         allButtons.get(buttonid2).setState(CardButton.CardButtonState.DEFAULT);
     }
     public void updateScore(int playerNum){
+        currentPairs++;
+
         switch(playerNum){
             case 1:
                 playerOneScore++;
@@ -405,16 +407,63 @@ public class GameBoard {
                 break;
         }
         //Checks if boards empty
-        currentPairs++;
         if (currentPairs >= TOTAL_PAIRS) {
-            //if player id == highest score && not tied
-            displayEnd(TIE_IMAGE);
-            //if tie
-            //displayEnd(TIE_IMAGE);
-            //if lose
-            //displayEnd(LOSE_IMAGE);
+            checkWinner(playerId);
         }
     }
+
+    private void checkWinner(int playerNumber) {
+        List<Integer> playerScores = Arrays.asList(playerOneScore, playerTwoScore, playerThreeScore, playerFourScore);
+        Collections.sort(playerScores, Collections.reverseOrder());
+        System.out.println(playerScores);
+        int winningScore = playerScores.get(0);
+        boolean tie = playerScores.get(0) == playerScores.get(1) ? true : false;
+        System.out.println(tie);
+        System.out.println(winningScore);
+
+        switch (playerNumber) {
+            case 1:
+                if(tie && playerOneScore == winningScore) {
+                    displayEnd(TIE_IMAGE);
+                } else if(!tie && playerOneScore == winningScore) {
+                    displayEnd(WIN_IMAGE);
+                } else {
+                    displayEnd(LOSE_IMAGE);
+                }
+                break;
+
+            case 2:
+                if(tie && playerTwoScore == winningScore) {
+                    displayEnd(TIE_IMAGE);
+                } else if(!tie && playerTwoScore == winningScore) {
+                    displayEnd(WIN_IMAGE);
+                } else {
+                    displayEnd(LOSE_IMAGE);
+                }
+                break;
+
+            case 3:
+                if(tie && playerThreeScore == winningScore) {
+                    displayEnd(TIE_IMAGE);
+                } else if(!tie && playerThreeScore == winningScore) {
+                    displayEnd(WIN_IMAGE);
+                } else {
+                    displayEnd(LOSE_IMAGE);
+                }
+                break;
+
+            case 4:
+                if(tie && playerFourScore == winningScore) {
+                    displayEnd(TIE_IMAGE);
+                } else if(!tie && playerFourScore == winningScore) {
+                    displayEnd(WIN_IMAGE);
+                } else {
+                    displayEnd(LOSE_IMAGE);
+                }
+                break;
+        }
+    }
+
     private void displayEnd(String filePath){
         ImageView imageView = new ImageView(new Image(String.valueOf(getClass().getResource(filePath))));
 

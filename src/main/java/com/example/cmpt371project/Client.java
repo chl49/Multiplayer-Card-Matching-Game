@@ -110,9 +110,6 @@ public class Client implements Runnable
                 buttonid2 = Integer.parseInt(message[4]);
                 game.releaseCards(buttonid1, buttonid2);
                 break;
-            case "score":
-                game.updateScore(playerNum);
-                break;
         }
     }
 }
