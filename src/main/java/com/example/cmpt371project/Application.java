@@ -42,9 +42,6 @@ public class Application extends javafx.application.Application {
             key.notify();
         }
     }
-    public synchronized int getHostPort(){
-        return hostPort;
-    }
     public static void setClientConnect(boolean connect){
         clientConnected = connect;
     }
@@ -72,9 +69,6 @@ public class Application extends javafx.application.Application {
 
     public void switchToServerScene(ActionEvent event) throws IOException, InterruptedException {
         //Get Host ip address
-        String urlString = "http://checkip.amazonaws.com/";
-        URL url = new URL(urlString);
-        //String ip;
         String ip = InetAddress.getLocalHost().getHostAddress();
 
         System.out.println(ip);

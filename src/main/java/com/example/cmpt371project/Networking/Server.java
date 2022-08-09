@@ -8,8 +8,7 @@ import java.net.*;
 
 public class Server implements Runnable{
     //player array variable to store players ports (only used for sending game board at the start)
-    private boolean hasMessage;
-    private final int MAX_PLAYERS = 4;
+    private final int MAX_PLAYERS = 1;
     private final DatagramPacket[] playerData = new DatagramPacket[MAX_PLAYERS];
     private int currentPlayers = 0;
     private boolean serverRunning = false;
@@ -21,7 +20,7 @@ public class Server implements Runnable{
         playerData[currentPlayers] = new DatagramPacket(Buffer_in,Buffer_in.length,addr,port);
         currentPlayers++;
 
-        //NEW ###Herb: Acknowledge users connected, locking clients to port
+        //Acknowledge users connected, locking clients to port
         String Message = "Connected";
         byte[] buffer_out = Message.getBytes();
         DatagramPacket packet_out = new DatagramPacket(buffer_out, buffer_out.length, addr, port);
@@ -39,7 +38,7 @@ public class Server implements Runnable{
             for (int i = 0; i < MAX_PLAYERS; i++){
                 InetAddress Add = playerData[i].getAddress();
                 int P = playerData[i].getPort();
-                //NEW Herb: w/ player numbers sent
+                //Player numbers sent
                 String msg = boardMsg+','+i;
                 buffer_cast = msg.getBytes();
                 DatagramPacket packet_cast = new DatagramPacket(buffer_cast, buffer_cast.length, Add, P);
@@ -50,11 +49,8 @@ public class Server implements Runnable{
         }
     }
     public void updateClient(DatagramSocket socket, DatagramPacket packet_in, byte[] Buffer_in, String[] data) throws IOException {
-        //NEW ###Herb: Acknowledge users connected, locking clients to port
-
-        //String NewMessage = "DONE";
+        //Acknowledge users connected, locking clients to port
         String message = String.join(",",data);
-        //updateMessageQueue(data);
         System.out.println(message);
         //Send Data to other players
         for (int i = 0; i < MAX_PLAYERS; i++){
