@@ -43,5 +43,3 @@ Once the game has started there will be two options: `Create Server Game` and `J
   - If the two cards do not match they will be flipped back over to their backs and returned to into play for other players.
 - Once all cards have been matched the game will end and each player's result will be displayed on screen.
 
-## Video
-DEMO: https://www.youtube.com/watch?v=eMsG3WkvgY0
